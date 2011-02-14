@@ -728,7 +728,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
                                     </TD>
                                 </TR>
 
-                                <xsl:for-each select="CONSTANT | VARIABLE">
+                                <xsl:for-each select="CONSTANT | VARIABLE | MEMBER-FUNCTION">
                                     <xsl:sort select="@NAME"/>
                                     <TR CLASS="TableRowColor">
                                         <TD ALIGN="right" VALIGN="top" WIDTH="1%">
@@ -789,7 +789,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
     <!-- ************************** FIELD DETAIL *************************** -->
                         <A NAME="field_detail"></A>
-                        <xsl:if test="CONSTANT | VARIABLE">
+                        <xsl:if test="CONSTANT | VARIABLE | MEMBER-FUNCTION">
 
                             <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
                                 <TR CLASS="TableHeadingColor">
@@ -801,7 +801,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
                                 </TR>
                             </TABLE>
 
-                            <xsl:for-each select="CONSTANT | VARIABLE">
+                            <xsl:for-each select="CONSTANT | VARIABLE | MEMBER-FUNCTION">
                                 <A NAME="{@NAME}"></A>
                                 <H3>
                                     <xsl:value-of select="@NAME"/>

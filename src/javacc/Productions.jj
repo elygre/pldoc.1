@@ -3,7 +3,17 @@
 void input() throws SAXException : {}
 {
   (
-    (LOOKAHEAD(6) packageSpec() | LOOKAHEAD(4) typeSpec() /*TODO package body parsing not supported | LOOKAHEAD(6) packageBody() */ | sqlPlusCommand() | LOOKAHEAD(6) table() | view() | comment())
+    (
+			LOOKAHEAD(6) packageSpec() 
+		| 	LOOKAHEAD(4) typeSpec() 
+		|	alterType()
+			/*TODO package body parsing not supported | LOOKAHEAD(6) packageBody() */ 
+		| sqlPlusCommand() 
+		| LOOKAHEAD(6) table() 
+		| view() 
+		| comment()
+	)
+
     ("/")*
   )*
   <EOF>
@@ -109,6 +119,28 @@ void declarativeSection(boolean isPackageLevel) throws SAXException :
     )*
 }
 
+void alterType() throws SAXException :
+{
+	Token id=null; 
+}
+{
+	// We deal with "ALTER TYPE type"
+	<ALTER> <TYPE> id=ID()
+	
+	//
+	alterTypeAddMemberFunction(id)
+}
+
+void alterTypeAddMemberFunction(Token type) throws SAXException :
+{
+	Token member;
+}
+{
+	<ADD> <MEMBER> programUnit(true)
+}
+
+
+
 void typeSpec() throws SAXException :
 {
 	Token tokenCreate=null, tokenIdent=null, schema=null, name=null; 
@@ -121,16 +153,14 @@ void typeSpec() throws SAXException :
 		schemaString = (schema == null) ? "" : schema.toString();
 	}
 
-	( LOOKAHEAD(2) createNestedTableType(tokenCreate, tokenIdent, schemaString, name.toString()) 
-	| LOOKAHEAD(2) createVarrayType(tokenCreate, tokenIdent, schemaString, name.toString()) 
-	| createTypeObject(tokenCreate, tokenIdent, schemaString, name.toString()) 
-	| createTypeUnder(tokenCreate, tokenIdent, schemaString, name.toString()) 
+	( LOOKAHEAD(2) typeNestedTable(tokenCreate, tokenIdent, schemaString, name.toString()) 
+	| LOOKAHEAD(2) typeVarray(tokenCreate, tokenIdent, schemaString, name.toString()) 
+	| typeObject(tokenCreate, tokenIdent, schemaString, name.toString()) 
+	| typeUnder(tokenCreate, tokenIdent, schemaString, name.toString()) 
 	)
-  
-  // (LOOKAHEAD(8) createObjectType() | LOOKAHEAD(8) createVarrayType() | LOOKAHEAD(8) createNestedTableType(tokenCreate))
 }
 
-void createNestedTableType(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException :
+void typeNestedTable(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException :
 {
 	Token datatype=null;
 }
@@ -150,7 +180,7 @@ void createNestedTableType(Token tokenCreate, Token tokenIdent, String schema, S
 	}
 }
 
-void createVarrayType(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException :
+void typeVarray(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException :
 {
 	Token size=null, datatype=null;
 }
@@ -170,7 +200,7 @@ void createVarrayType(Token tokenCreate, Token tokenIdent, String schema, String
 	}
 }
 
-void createTypeUnder(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException :
+void typeUnder(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException :
 {
 	Token supertype = null;
 }
@@ -187,7 +217,7 @@ void createTypeUnder(Token tokenCreate, Token tokenIdent, String schema, String 
 		processPackageComment(tokenIdent);
 	}
 
-	typeDeclarativeSection(true)
+	typeDeclarativeSection(true) ( "," typeDeclarativeSection(true) )*
 
 	")" 
 
@@ -199,7 +229,7 @@ void createTypeUnder(Token tokenCreate, Token tokenIdent, String schema, String 
 	{ m_out.endElement("TYPE"); }
 }
 
-void createTypeObject(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException : {}
+void typeObject(Token tokenCreate, Token tokenIdent, String schema, String name) throws SAXException : {}
 {
 	(<IS> | <AS>) <OBJECT> "("
 	{
@@ -221,7 +251,7 @@ void createTypeObject(Token tokenCreate, Token tokenIdent, String schema, String
 	}
 */
 
-	typeDeclarativeSection(true)
+	typeDeclarativeSection(true) ( "," typeDeclarativeSection(true) )*
 
 	")" 
 
@@ -238,21 +268,62 @@ void typeDeclarativeSection(boolean isPackageLevel) throws SAXException :
 {}
 {
     (
-    LOOKAHEAD(4)
-    typeMemberDeclaration()
+		LOOKAHEAD(2) typeMapMemberDeclaration()
+	|	LOOKAHEAD(2) typeMemberDeclaration()
+	|	LOOKAHEAD(4) typeVariableDeclaration()
     )*
 }
 
-void typeMemberDeclaration() throws SAXException :
-{ Token name=null;
-  String type;
-  Hashtable tags = null;
-  String elementName = "VARIABLE";
+void typeMapMemberDeclaration() throws SAXException :
+{
+	Token start=null;
+	Token name=null;
+	String type;
+	String elementName = "MEMBER-FUNCTION";
 }
 {
-  name=ID() type=datatype() (",")?
+  start=<MAP> <MEMBER> <FUNCTION> name=ID() <RETURN> type=datatype() 
   {
-      tags = processMemberComment(name, elementName, name.toString());
+      processMemberComment(start, elementName, name.toString());
+      m_out.pushAttribute("TYPE", purifyIdentifier(type));
+      m_out.startElement("RETURN");
+      m_out.endElement("RETURN");
+      m_out.pushAttribute("NAME", purifyIdentifier(name.toString()));
+      m_out.pushAttribute("TYPE", purifyIdentifier(type));
+      m_out.endElement(elementName);
+  }
+}
+
+void typeMemberDeclaration() throws SAXException :
+{
+	Token start=null;
+	Token name=null;
+	String type;
+	String elementName = "MEMBER-FUNCTION";
+}
+{
+  start=<MEMBER> <FUNCTION> name=ID() <RETURN> type=datatype() (<CASCADE>)?
+  {
+      processMemberComment(start, elementName, name.toString());
+      m_out.pushAttribute("TYPE", purifyIdentifier(type));
+      m_out.startElement("RETURN");
+      m_out.endElement("RETURN");
+      m_out.pushAttribute("NAME", purifyIdentifier(name.toString()));
+      m_out.pushAttribute("TYPE", purifyIdentifier(type));
+      m_out.endElement(elementName);
+  }
+}
+
+void typeVariableDeclaration() throws SAXException :
+{
+	Token name=null;
+	String type;
+	String elementName = "VARIABLE";
+}
+{
+  name=ID() type=datatype()
+  {
+      processMemberComment(name, elementName, name.toString());
       m_out.pushAttribute("TYPE", purifyIdentifier(type));
       m_out.startElement("RETURN");
       m_out.endElement("RETURN");
@@ -350,6 +421,7 @@ void programUnit(boolean isPackageLevel) throws SAXException :
   [<DETERMINISTIC>]
   [<PARALLEL_ENABLE>]
   [<PIPELINED>]
+  [<CASCADE>]
   // body
   [
     (<IS> | <AS>)

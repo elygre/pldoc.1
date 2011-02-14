@@ -65,6 +65,7 @@ TOKEN [IGNORE_CASE]:
 TOKEN [IGNORE_CASE]:
 {
 <ALL: "ALL"> |
+<ADD: "ADD"> |
 <ALTER: "ALTER"> |
 <AND: "AND"> |
 <ANY: "ANY"> |
@@ -83,6 +84,7 @@ TOKEN [IGNORE_CASE]:
 <BY: "BY"> |
 <BYTE: "BYTE"> |
 <CASE: "CASE"> |
+<CASCADE: "CASCADE"> |
 <CHAR: "CHAR"> |
 <CHAR_BASE: "CHAR_BASE"> |
 <CHECK: "CHECK"> |
@@ -155,7 +157,9 @@ TOKEN [IGNORE_CASE]:
 <LOCK: "LOCK"> |
 <LONG: "LONG"> |
 <LOOP: "LOOP"> |
+<MAP: "MAP"> |
 <MAX: "MAX"> |
+<MEMBER: "MEMBER"> |
 <MIN: "MIN"> |
 <MINUS: "MINUS"> |
 <MINUTE: "MINUTE"> |

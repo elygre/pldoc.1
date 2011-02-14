@@ -1,49 +1,38 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!-- 11.05.2006 - Matthias Hendler - Some extra Maven tasks -->
-
-<project xmlns:j="jelly:core" xmlns:ant="jelly:ant" default="">
-
-	<!-- Preparing jar -->
-	<preGoal name="jar:jar">
-		<echo>Preparing jar</echo>
-
-		<ant:property name="dir.src.resources" value="${basedir}/src/resources"/>
-		<ant:property name="dir.target.resources" value="${maven.build.dest}/resources"/>
-		<ant:delete dir="${dir.target.resources}"/>
-		<ant:mkdir dir="${dir.target.resources}"/>
-		
-		<ant:copy todir="${dir.target.resources}">
-    		<ant:fileset dir="${dir.src.resources}"/>
-  		</ant:copy>
-	</preGoal>
-
-	<!-- Preparing java -->
-	<preGoal name="java:compile">
-		<echo>Preparing java</echo>
-		
-		<!-- Clean up -->
-		<attainGoal name="clean"/> 		
-		
-		<!-- Compile grammar -->
-		<attainGoal name="javacc"/> 		
-		
-		<!-- Compile java -->
-		<attainGoal name="java:prepare-filesystem"/>
-	</preGoal>
-
-	<!-- Preparing javcc -->
-	<preGoal name="javacc">
-		<echo>Preparing javacc</echo>
-    	
-    	<ant:delete file="${maven.javacc.javacc.grammar}" verbose="true" />
-    	
-    	<echo>Concatenating grammar files...</echo>
-    	<ant:dirname property="maven.javacc.javacc.grammar.dir" file="${maven.javacc.javacc.grammar}"/>
-    	<ant:concat destfile="${maven.javacc.javacc.grammar}">
-      		<ant:filelist dir="${maven.javacc.javacc.grammar.dir}"
-         			  files="Parser.jj,Tokens.jj,Productions.jj,ProductionsDDL.jj" />
-    	</ant:concat>
-	</preGoal>
-
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 11.05.2006 - Matthias Hendler - Some extra Maven tasks -->
+
+<project xmlns:j="jelly:core" xmlns:ant="jelly:ant" default="">
+	<!-- Preparing jar -->
+	<preGoal name="jar:jar">
+		<echo>Preparing jar</echo>
+		<ant:property name="dir.src.resources" value="${basedir}/src/resources"/>
+		<ant:property name="dir.target.resources" value="${maven.build.dest}/resources"/>
+		<ant:delete dir="${dir.target.resources}"/>
+		<ant:mkdir dir="${dir.target.resources}"/>
+		<ant:copy todir="${dir.target.resources}">
+    		<ant:fileset dir="${dir.src.resources}"/>
+  		</ant:copy>
+	</preGoal>
+
+	<!-- Preparing java -->
+	<preGoal name="java:compile">
+		<echo>Preparing java</echo>
+		<attainGoal name="clean"/> 		
+		<attainGoal name="javacc"/> 		
+		<attainGoal name="java:prepare-filesystem"/>
+	</preGoal>
+
+	<!-- Preparing javcc -->
+	<!--
+	<preGoal name="javacc">
+		<echo>Preparing javacc</echo>
+    	<ant:delete file="${maven.javacc.javacc.grammar}" verbose="true" />
+    	<echo>Concatenating grammar files...</echo>
+    	<ant:dirname property="maven.javacc.javacc.grammar.dir" file="${maven.javacc.javacc.grammar}"/>
+    	<ant:concat destfile="${maven.javacc.javacc.grammar}">
+      		<ant:filelist dir="${maven.javacc.javacc.grammar.dir}"
+         			  files="Parser.jj,Tokens.jj,Productions.jj,ProductionsDDL.jj" />
+    	</ant:concat>
+	</preGoal>
+	-->
 </project>
