@@ -1,1 +1,12 @@
-h1. PLDocpldoc is an open-source utility for generating HTML documentation of code written in Oracle PL/SQL. The goal is to provide a tool analogous to javadocfor Java.The PLDoc source code on github was once fetched from the original pldoc project located at sourceforge, http://pldoc.sourceforge.net. The branchwas made when I wanted to make some bigger changes, and needed a place towork. Hey, nothing beats github for that!Eirik
+h1. PLDoc
+
+pldoc is an open-source utility for generating HTML documentation of code 
+written in Oracle PL/SQL. The goal is to provide a tool analogous to javadoc
+for Java.
+
+The PLDoc source code on github was once fetched from the original pldoc 
+project located at sourceforge, http://pldoc.sourceforge.net. The branch
+was made when I wanted to make some bigger changes, and needed a place to
+work. Hey, nothing beats github for that!
+
+Eirik
