@@ -1,0 +1,375 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>TheBigApp</TITLE>
+<LINK TITLE="Style" HREF="stylesheet.css" TYPE="text/css" REL="stylesheet">
+</HEAD>
+<BODY BGCOLOR="white">
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>TheBigApp</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+<H2>
+<FONT SIZE="-1"></FONT>
+<BR>
+    Package  logg</H2>
+<P> Project:         Test Project (<a href="http://pldoc.sourceforge.net">PLDoc</a>)<br/>
+ Description:     Logging of PL/SQL code events and data that caused the events<br/>
+ DB impact:       YES<br/>
+ Commit inside:   YES<br/>
+ Rollback inside: NO<br/>
+</P>
+<HR>
+<P></P>
+<A NAME="field_summary"></A><A NAME="type_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Type Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;logs%ROWTYPE</CODE></FONT></TD><TD><CODE><B><A HREF="#Log_Record">Log_Record</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;TABLE OF Log_Record INDEX BY BINARY_INTEGER</CODE></FONT></TD><TD><CODE><B><A HREF="#Log_Table">Log_Table</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="method_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Method Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#add_error">add_error</A></B>(txt VARCHAR2, loc VARCHAR2, proc VARCHAR2, pck VARCHAR2, sch VARCHAR2, usr VARCHAR2, err VARCHAR2, dtime DATE)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Records an ERROR in the error logging table.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#add_record">add_record</A></B>(p_type VARCHAR2, txt VARCHAR2, loc VARCHAR2, proc VARCHAR2, pck VARCHAR2, sch VARCHAR2, usr VARCHAR2, err VARCHAR2, dtime DATE)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Records an event in the error logging table.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#add_trace">add_trace</A></B>(txt VARCHAR2, loc VARCHAR2, proc VARCHAR2, pck VARCHAR2, sch VARCHAR2, usr VARCHAR2, err VARCHAR2, dtime DATE)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Records an WARNING in the error logging table.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#add_warning">add_warning</A></B>(txt VARCHAR2, loc VARCHAR2, proc VARCHAR2, pck VARCHAR2, sch VARCHAR2, usr VARCHAR2, err VARCHAR2, dtime DATE)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Records an WARNING in the error logging table.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#Clean">Clean</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Clear pending logs
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#Flush">Flush</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Saves pending logs into the log table
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#Show_Output">Show_Output</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Shows pending logs on DBMS_OUTPUT, without erasing them
+</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="field_detail"></A><A NAME="type_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Type Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="Log_Record"></A>
+<H3>Log_Record</H3>
+<PRE>
+  public logs%ROWTYPE <B>Log_Record</B>()</PRE>
+<DL>
+<DD></DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="Log_Table"></A>
+<H3>Log_Table</H3>
+<PRE>
+  public TABLE OF Log_Record INDEX BY BINARY_INTEGER <B>Log_Table</B>()</PRE>
+<DL>
+<DD></DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="method_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="add_error"></A>
+<H3>add_error</H3>
+<PRE>
+  public  <B>add_error</B>(txt VARCHAR2, <BR>                    loc VARCHAR2, <BR>                    proc VARCHAR2, <BR>                    pck VARCHAR2, <BR>                    sch VARCHAR2, <BR>                    usr VARCHAR2, <BR>                    err VARCHAR2, <BR>                    dtime DATE)</PRE>
+<DL>
+<DD>  Records an ERROR in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>txt</CODE> - 
+              text containing the context of the situation (values of variables, parameters etc)</DD>
+<DD>
+<CODE>loc</CODE> - 
+              location in code (denoted by some ID which is unique in the procedure/function)</DD>
+<DD>
+<CODE>proc</CODE> - 
+              procedure or function name</DD>
+<DD>
+<CODE>pck</CODE> - 
+              package name</DD>
+<DD>
+<CODE>sch</CODE> - 
+              database schema name</DD>
+<DD>
+<CODE>usr</CODE> - 
+              application user name (if NULL, USER will be written)</DD>
+<DD>
+<CODE>err</CODE> - 
+              Error text</DD>
+<DD>
+<CODE>dtime</CODE> - 
+              datetime (if NULL, sysdate is used)</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="add_warning"></A>
+<H3>add_warning</H3>
+<PRE>
+  public  <B>add_warning</B>(txt VARCHAR2, <BR>                      loc VARCHAR2, <BR>                      proc VARCHAR2, <BR>                      pck VARCHAR2, <BR>                      sch VARCHAR2, <BR>                      usr VARCHAR2, <BR>                      err VARCHAR2, <BR>                      dtime DATE)</PRE>
+<DL>
+<DD>  Records an WARNING in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>txt</CODE> - 
+              text containing the context of the situation (values of variables, parameters etc)</DD>
+<DD>
+<CODE>loc</CODE> - 
+              location in code (denoted by some ID which is unique in the procedure/function)</DD>
+<DD>
+<CODE>proc</CODE> - 
+              procedure or function name</DD>
+<DD>
+<CODE>pck</CODE> - 
+              package name</DD>
+<DD>
+<CODE>sch</CODE> - 
+              database schema name</DD>
+<DD>
+<CODE>usr</CODE> - 
+              application user name (if NULL, USER will be written)</DD>
+<DD>
+<CODE>err</CODE> - 
+              Error text</DD>
+<DD>
+<CODE>dtime</CODE> - 
+              datetime (if NULL, sysdate is used)</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="add_trace"></A>
+<H3>add_trace</H3>
+<PRE>
+  public  <B>add_trace</B>(txt VARCHAR2, <BR>                    loc VARCHAR2, <BR>                    proc VARCHAR2, <BR>                    pck VARCHAR2, <BR>                    sch VARCHAR2, <BR>                    usr VARCHAR2, <BR>                    err VARCHAR2, <BR>                    dtime DATE)</PRE>
+<DL>
+<DD>  Records an WARNING in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>txt</CODE> - 
+              text containing the context of the situation (values of variables, parameters etc)</DD>
+<DD>
+<CODE>loc</CODE> - 
+              location in code (denoted by some ID which is unique in the procedure/function)</DD>
+<DD>
+<CODE>proc</CODE> - 
+              procedure or function name</DD>
+<DD>
+<CODE>pck</CODE> - 
+              package name</DD>
+<DD>
+<CODE>sch</CODE> - 
+              database schema name</DD>
+<DD>
+<CODE>usr</CODE> - 
+              application user name (if NULL, USER will be written)</DD>
+<DD>
+<CODE>err</CODE> - 
+              Error text</DD>
+<DD>
+<CODE>dtime</CODE> - 
+              datetime (if NULL, sysdate is used)</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="add_record"></A>
+<H3>add_record</H3>
+<PRE>
+  public  <B>add_record</B>(p_type VARCHAR2, <BR>                     txt VARCHAR2, <BR>                     loc VARCHAR2, <BR>                     proc VARCHAR2, <BR>                     pck VARCHAR2, <BR>                     sch VARCHAR2, <BR>                     usr VARCHAR2, <BR>                     err VARCHAR2, <BR>                     dtime DATE)</PRE>
+<DL>
+<DD>  Records an event in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>p_type</CODE> - 
+              log type (E=error, W=warning, T=trace)</DD>
+<DD>
+<CODE>txt</CODE> - 
+              text containing the context of the situation (values of variables, parameters etc)</DD>
+<DD>
+<CODE>loc</CODE> - 
+              location in code (denoted by some ID which is unique in the procedure/function)</DD>
+<DD>
+<CODE>proc</CODE> - 
+              procedure or function name</DD>
+<DD>
+<CODE>pck</CODE> - 
+              package name</DD>
+<DD>
+<CODE>sch</CODE> - 
+              database schema name</DD>
+<DD>
+<CODE>usr</CODE> - 
+              application user name (if NULL, USER will be written)</DD>
+<DD>
+<CODE>err</CODE> - 
+              Error text</DD>
+<DD>
+<CODE>dtime</CODE> - 
+              datetime (if NULL, sysdate is used)</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="Flush"></A>
+<H3>Flush</H3>
+<PRE>
+  public  <B>Flush</B>()</PRE>
+<DL>
+<DD>Saves pending logs into the log table
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="Show_Output"></A>
+<H3>Show_Output</H3>
+<PRE>
+  public  <B>Show_Output</B>()</PRE>
+<DL>
+<DD>Shows pending logs on DBMS_OUTPUT, without erasing them
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="Clean"></A>
+<H3>Clean</H3>
+<PRE>
+  public  <B>Clean</B>()</PRE>
+<DL>
+<DD>Clear pending logs
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>TheBigApp</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+</BODY>
+</HTML>

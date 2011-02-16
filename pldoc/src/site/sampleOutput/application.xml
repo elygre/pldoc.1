@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<!DOCTYPE APPLICATION SYSTEM "application.dtd">
+<APPLICATION NAME="TheBigApp">
+<OVERVIEW><![CDATA[
+<b>Welcome to TheBigApp project documentation page.</b>
+<p/>
+This application can do many things: <br/>
+<ul>
+  <li>Create, update and query customers</li>
+  <li>Read system parameters</li>
+  <li>Write stuff to log</li>
+</ul>
+More things to come, stay tuned ...<br/>
+<br/>
+(this was the content of <span style="font-family: monospace;">overview.html</span>)<br/>
+
+]]></OVERVIEW>
+<PACKAGE NAME="CUSTOMER_DATA" SCHEMA="" >
+<COMMENT><![CDATA[ Project:         Test Project (<a href="http://pldoc.sourceforge.net">PLDoc</a>)<br/>
+ Description:     Customer Data Management<br/>
+ DB impact:       YES<br/>
+ Commit inside:   NO<br/>
+ Rollback inside: NO<br/>
+]]></COMMENT>
+<TYPE NAME="customer_type">
+<COMMENT_FIRST_LINE><![CDATA[ Record of customer data.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Record of customer data.
+]]></COMMENT>
+<FIELD NAME="id" TYPE="VARCHAR2(20)">
+<COMMENT><![CDATA[customer ID]]></COMMENT>
+</FIELD>
+<FIELD NAME="name" TYPE="VARCHAR2(100)">
+<COMMENT><![CDATA[customer name]]></COMMENT>
+</FIELD>
+<FIELD NAME="regno" TYPE="VARCHAR2(50)">
+<COMMENT><![CDATA[registration number or SSN]]></COMMENT>
+</FIELD>
+<FIELD NAME="language" TYPE="VARCHAR2(10)">
+<COMMENT><![CDATA[preferred language]]></COMMENT>
+</FIELD>
+<RETURN TYPE="RECORD" />
+</TYPE>
+<TYPE NAME="customer_table">
+<COMMENT_FIRST_LINE><![CDATA[ Table of customer records.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Table of customer records. 
+]]></COMMENT>
+<RETURN TYPE="TABLE OF customer_type INDEX BY BINARY_INTEGER" />
+</TYPE>
+<PROCEDURE NAME="get_customer">
+<COMMENT_FIRST_LINE><![CDATA[ Gets customer by ID.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Gets customer by ID.
+]]></COMMENT>
+<ARGUMENT NAME="p_id" TYPE="VARCHAR2">
+<COMMENT><![CDATA[customer ID]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="customer_rec" TYPE="customer_type">
+</ARGUMENT>
+<THROWS NAME="no_data_found">
+<COMMENT><![CDATA[ if no such customer exists]]></COMMENT>
+</THROWS>
+</PROCEDURE>
+<PROCEDURE NAME="get_by_criteria">
+<COMMENT_FIRST_LINE><![CDATA[ Searches customer by criteria.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Searches customer by criteria.
+]]></COMMENT>
+<ARGUMENT NAME="p_criteria" TYPE="customer_type">
+<COMMENT><![CDATA[record with assigned search criteria]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="r_records" TYPE="customer_table">
+<COMMENT><![CDATA[table of found customers <b>(may be empty!)</b>]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+<PROCEDURE NAME="create_customer">
+<COMMENT_FIRST_LINE><![CDATA[ Creates a customer record.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Creates a customer record.
+]]></COMMENT>
+<ARGUMENT NAME="customer_rec" TYPE="customer_type">
+<COMMENT><![CDATA[record of customer data]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+<PROCEDURE NAME="update_customer">
+<COMMENT_FIRST_LINE><![CDATA[ Changes customer data.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Changes customer data.
+]]></COMMENT>
+<ARGUMENT NAME="customer_rec" TYPE="customer_type">
+<COMMENT><![CDATA[record of updated customer data]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+</PACKAGE>
+<PACKAGE NAME="syspar" SCHEMA="" >
+<COMMENT><![CDATA[ Project:         Test Project (<a href="http://pldoc.sourceforge.net">PLDoc</a>)<br/>
+ Description:     System Parameters Management<br/>
+ DB impact:       YES<br/>
+ Commit inside:   NO<br/>
+ Rollback inside: NO<br/>
+]]></COMMENT>
+<FUNCTION NAME="get_char">
+<COMMENT_FIRST_LINE><![CDATA[ Gets system parameter value.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Gets system parameter value.
+]]></COMMENT>
+<ARGUMENT NAME="p_name" TYPE="VARCHAR2">
+<COMMENT><![CDATA[parameter name]]></COMMENT>
+</ARGUMENT>
+<RETURN TYPE="VARCHAR2">
+<COMMENT><![CDATA[parameter value]]></COMMENT>
+</RETURN>
+<THROWS NAME="no_data_found">
+<COMMENT><![CDATA[ if no parameter with such name found]]></COMMENT>
+</THROWS>
+</FUNCTION>
+<FUNCTION NAME="get_date">
+<COMMENT_FIRST_LINE><![CDATA[ Gets system parameter value.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Gets system parameter value.
+]]></COMMENT>
+<ARGUMENT NAME="p_name" TYPE="VARCHAR2">
+<COMMENT><![CDATA[parameter name]]></COMMENT>
+</ARGUMENT>
+<RETURN TYPE="DATE">
+<COMMENT><![CDATA[parameter value]]></COMMENT>
+</RETURN>
+<THROWS NAME="no_data_found">
+<COMMENT><![CDATA[ if no parameter with such name found]]></COMMENT>
+</THROWS>
+</FUNCTION>
+<FUNCTION NAME="get_number">
+<COMMENT_FIRST_LINE><![CDATA[ Gets system parameter value.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[ Gets system parameter value.
+]]></COMMENT>
+<ARGUMENT NAME="p_name" TYPE="VARCHAR2">
+<COMMENT><![CDATA[parameter name]]></COMMENT>
+</ARGUMENT>
+<RETURN TYPE="NUMBER">
+<COMMENT><![CDATA[parameter value]]></COMMENT>
+</RETURN>
+<THROWS NAME="no_data_found">
+<COMMENT><![CDATA[ if no parameter with such name found]]></COMMENT>
+</THROWS>
+</FUNCTION>
+</PACKAGE>
+<PACKAGE NAME="logg" SCHEMA="" >
+<COMMENT><![CDATA[ Project:         Test Project (<a href="http://pldoc.sourceforge.net">PLDoc</a>)<br/>
+ Description:     Logging of PL/SQL code events and data that caused the events<br/>
+ DB impact:       YES<br/>
+ Commit inside:   YES<br/>
+ Rollback inside: NO<br/>
+]]></COMMENT>
+<TYPE NAME="Log_Record">
+<RETURN TYPE="logs%ROWTYPE" />
+</TYPE>
+<TYPE NAME="Log_Table">
+<RETURN TYPE="TABLE OF Log_Record INDEX BY BINARY_INTEGER" />
+</TYPE>
+<PROCEDURE NAME="add_error">
+<COMMENT_FIRST_LINE><![CDATA[  Records an ERROR in the error logging table.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[  Records an ERROR in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+]]></COMMENT>
+<ARGUMENT NAME="txt" TYPE="VARCHAR2">
+<COMMENT><![CDATA[text containing the context of the situation (values of variables, parameters etc)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="loc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[location in code (denoted by some ID which is unique in the procedure/function)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="proc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[procedure or function name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="pck" TYPE="VARCHAR2">
+<COMMENT><![CDATA[package name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="sch" TYPE="VARCHAR2">
+<COMMENT><![CDATA[database schema name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="usr" TYPE="VARCHAR2">
+<COMMENT><![CDATA[application user name (if NULL, USER will be written)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="err" TYPE="VARCHAR2">
+<COMMENT><![CDATA[Error text]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="dtime" TYPE="DATE">
+<COMMENT><![CDATA[datetime (if NULL, sysdate is used)]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+<PROCEDURE NAME="add_warning">
+<COMMENT_FIRST_LINE><![CDATA[  Records an WARNING in the error logging table.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[  Records an WARNING in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+]]></COMMENT>
+<ARGUMENT NAME="txt" TYPE="VARCHAR2">
+<COMMENT><![CDATA[text containing the context of the situation (values of variables, parameters etc)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="loc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[location in code (denoted by some ID which is unique in the procedure/function)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="proc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[procedure or function name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="pck" TYPE="VARCHAR2">
+<COMMENT><![CDATA[package name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="sch" TYPE="VARCHAR2">
+<COMMENT><![CDATA[database schema name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="usr" TYPE="VARCHAR2">
+<COMMENT><![CDATA[application user name (if NULL, USER will be written)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="err" TYPE="VARCHAR2">
+<COMMENT><![CDATA[Error text]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="dtime" TYPE="DATE">
+<COMMENT><![CDATA[datetime (if NULL, sysdate is used)]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+<PROCEDURE NAME="add_trace">
+<COMMENT_FIRST_LINE><![CDATA[  Records an WARNING in the error logging table.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[  Records an WARNING in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+]]></COMMENT>
+<ARGUMENT NAME="txt" TYPE="VARCHAR2">
+<COMMENT><![CDATA[text containing the context of the situation (values of variables, parameters etc)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="loc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[location in code (denoted by some ID which is unique in the procedure/function)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="proc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[procedure or function name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="pck" TYPE="VARCHAR2">
+<COMMENT><![CDATA[package name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="sch" TYPE="VARCHAR2">
+<COMMENT><![CDATA[database schema name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="usr" TYPE="VARCHAR2">
+<COMMENT><![CDATA[application user name (if NULL, USER will be written)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="err" TYPE="VARCHAR2">
+<COMMENT><![CDATA[Error text]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="dtime" TYPE="DATE">
+<COMMENT><![CDATA[datetime (if NULL, sysdate is used)]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+<PROCEDURE NAME="add_record">
+<COMMENT_FIRST_LINE><![CDATA[  Records an event in the error logging table.]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[  Records an event in the error logging table.
+ NB: the level filter may prevent the record to be actually written. (values of variables, parameters etc)
+]]></COMMENT>
+<ARGUMENT NAME="p_type" TYPE="VARCHAR2">
+<COMMENT><![CDATA[log type (E=error, W=warning, T=trace)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="txt" TYPE="VARCHAR2">
+<COMMENT><![CDATA[text containing the context of the situation (values of variables, parameters etc)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="loc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[location in code (denoted by some ID which is unique in the procedure/function)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="proc" TYPE="VARCHAR2">
+<COMMENT><![CDATA[procedure or function name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="pck" TYPE="VARCHAR2">
+<COMMENT><![CDATA[package name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="sch" TYPE="VARCHAR2">
+<COMMENT><![CDATA[database schema name]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="usr" TYPE="VARCHAR2">
+<COMMENT><![CDATA[application user name (if NULL, USER will be written)]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="err" TYPE="VARCHAR2">
+<COMMENT><![CDATA[Error text]]></COMMENT>
+</ARGUMENT>
+<ARGUMENT NAME="dtime" TYPE="DATE">
+<COMMENT><![CDATA[datetime (if NULL, sysdate is used)]]></COMMENT>
+</ARGUMENT>
+</PROCEDURE>
+<PROCEDURE NAME="Flush">
+<COMMENT_FIRST_LINE><![CDATA[Saves pending logs into the log table
+]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[Saves pending logs into the log table
+]]></COMMENT>
+</PROCEDURE>
+<PROCEDURE NAME="Show_Output">
+<COMMENT_FIRST_LINE><![CDATA[Shows pending logs on DBMS_OUTPUT, without erasing them
+]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[Shows pending logs on DBMS_OUTPUT, without erasing them
+]]></COMMENT>
+</PROCEDURE>
+<PROCEDURE NAME="Clean">
+<COMMENT_FIRST_LINE><![CDATA[Clear pending logs
+]]></COMMENT_FIRST_LINE>
+<COMMENT><![CDATA[Clear pending logs
+]]></COMMENT>
+</PROCEDURE>
+</PACKAGE>
+</APPLICATION>

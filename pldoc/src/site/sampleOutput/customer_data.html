@@ -1,0 +1,254 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>TheBigApp</TITLE>
+<LINK TITLE="Style" HREF="stylesheet.css" TYPE="text/css" REL="stylesheet">
+</HEAD>
+<BODY BGCOLOR="white">
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>TheBigApp</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+<H2>
+<FONT SIZE="-1"></FONT>
+<BR>
+    Package  CUSTOMER_DATA</H2>
+<P> Project:         Test Project (<a href="http://pldoc.sourceforge.net">PLDoc</a>)<br/>
+ Description:     Customer Data Management<br/>
+ DB impact:       YES<br/>
+ Commit inside:   NO<br/>
+ Rollback inside: NO<br/>
+</P>
+<HR>
+<P></P>
+<A NAME="field_summary"></A><A NAME="type_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Type Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;TABLE OF customer_type INDEX BY BINARY_INTEGER</CODE></FONT></TD><TD><CODE><B><A HREF="#customer_table">customer_table</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Table of customer records.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;RECORD</CODE></FONT></TD><TD><CODE><B><A HREF="#customer_type">customer_type</A></B>(id VARCHAR2(20), name VARCHAR2(100), regno VARCHAR2(50), language VARCHAR2(10))</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Record of customer data.</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="method_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Method Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#create_customer">create_customer</A></B>(customer_rec customer_type)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Creates a customer record.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#get_by_criteria">get_by_criteria</A></B>(p_criteria customer_type, r_records customer_table)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Searches customer by criteria.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#get_customer">get_customer</A></B>(p_id VARCHAR2, customer_rec customer_type)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Gets customer by ID.</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#update_customer">update_customer</A></B>(customer_rec customer_type)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Changes customer data.</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="field_detail"></A><A NAME="type_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Type Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="customer_type"></A>
+<H3>customer_type</H3>
+<PRE>
+  public RECORD <B>customer_type</B>(id VARCHAR2(20), <BR>                              name VARCHAR2(100), <BR>                              regno VARCHAR2(50), <BR>                              language VARCHAR2(10))</PRE>
+<DL>
+<DD> Record of customer data.
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>id</CODE> - 
+              customer ID</DD>
+<DD>
+<CODE>name</CODE> - 
+              customer name</DD>
+<DD>
+<CODE>regno</CODE> - 
+              registration number or SSN</DD>
+<DD>
+<CODE>language</CODE> - 
+              preferred language</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="customer_table"></A>
+<H3>customer_table</H3>
+<PRE>
+  public TABLE OF customer_type INDEX BY BINARY_INTEGER <B>customer_table</B>()</PRE>
+<DL>
+<DD> Table of customer records. 
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="method_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="get_customer"></A>
+<H3>get_customer</H3>
+<PRE>
+  public  <B>get_customer</B>(p_id VARCHAR2, <BR>                       customer_rec customer_type)</PRE>
+<DL>
+<DD> Gets customer by ID.
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>p_id</CODE> - 
+              customer ID</DD>
+</DT>
+<DT>
+<B>Throws:</B>
+<DD>
+<CODE>no_data_found</CODE> - 
+               if no such customer exists</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="get_by_criteria"></A>
+<H3>get_by_criteria</H3>
+<PRE>
+  public  <B>get_by_criteria</B>(p_criteria customer_type, <BR>                          r_records customer_table)</PRE>
+<DL>
+<DD> Searches customer by criteria.
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>p_criteria</CODE> - 
+              record with assigned search criteria</DD>
+<DD>
+<CODE>r_records</CODE> - 
+              table of found customers <b>(may be empty!)</b></DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="create_customer"></A>
+<H3>create_customer</H3>
+<PRE>
+  public  <B>create_customer</B>(customer_rec customer_type)</PRE>
+<DL>
+<DD> Creates a customer record.
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>customer_rec</CODE> - 
+              record of customer data</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="update_customer"></A>
+<H3>update_customer</H3>
+<PRE>
+  public  <B>update_customer</B>(customer_rec customer_type)</PRE>
+<DL>
+<DD> Changes customer data.
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>customer_rec</CODE> - 
+              record of updated customer data</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>TheBigApp</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+</BODY>
+</HTML>
