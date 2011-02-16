@@ -538,6 +538,7 @@ String scalar_datatype_name() :
     "(" size=numericLiteral() {name += "(" + size;}
      ["," precision=numericLiteral() {name += "," + precision;}]
      [<BYTE> { name += " byte"; }]
+     [<CHAR> { name += " char"; }]
     ")" {name += ")";})?
   { return name; }
 }
