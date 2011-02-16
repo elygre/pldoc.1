@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>Maven PLDoc Plugin Goals</title>
+  </properties>
+  <body>
+    <goals>
+      <goal>
+        <name>pldoc</name>
+        <description>Executes pldoc:report</description>
+      </goal>
+      <goal>
+        <name>pldoc:info</name>
+        <description>Prints plugin properties</description>
+      </goal>
+      <goal>
+        <name>pldoc:report</name>
+        <description>Generate Javadoc-like documentation for PL/SQL files</description>
+      </goal>
+    </goals>
+  </body>
+</document>

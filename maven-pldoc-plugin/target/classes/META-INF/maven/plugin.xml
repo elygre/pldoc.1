@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>Maven PLDoc Plugin - 2.1-SNAPSHOT</name>
+  <description>The Maven PLDoc Plugin is a plugin that uses the pldoc tool for
+            generating docs for the specified project.</description>
+  <groupId>net.sourceforge.pldoc</groupId>
+  <artifactId>maven-pldoc-plugin</artifactId>
+  <version>2.1-SNAPSHOT</version>
+  <goalPrefix>pldoc</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojos>
+    <mojo>
+      <goal>pldoc</goal>
+      <description>Goal which touches a timestamp file.
+
+Here i a sample configuration for the plugin with the defaults:
+            &lt;plugin&gt;
+&lt;groupId&gt;net.sourceforge.pldoc&lt;/groupId&gt;
+&lt;artifactId&gt;maven-pldoc-plugin&lt;/artifactId&gt;
+&lt;version&gt;2.0-SNAPSHOT&lt;/version&gt;
+&lt;configuration&gt;
+&lt;applicationTitle&gt;project-name&lt;/applicationTitle&gt;
+&lt;sourceDirectory&gt;src/sql&lt;/sourceDirectory&gt;
+&lt;includes&gt;*.sql&lt;/includes&gt;
+&lt;reportOutputDirectory&gt;target/site/apidocs&lt;/reportOutputDirectory&gt;
+&lt;/configuration&gt;                    
+&lt;/plugin&gt;</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>pldoc</phase>
+      <executePhase>generate-sources</executePhase>
+      <implementation>net.sourceforge.pldoc.mojo.PLDoc</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>false</threadSafe>
+      <parameters>
+        <parameter>
+          <name>applicationTitle</name>
+          <type>java.lang.String</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Specifies the application title</description>
+        </parameter>
+        <parameter>
+          <name>description</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The description of the Javadoc report.</description>
+        </parameter>
+        <parameter>
+          <name>destDir</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The name of the destination directory.
+&lt;br/&gt;</description>
+        </parameter>
+        <parameter>
+          <name>includes</name>
+          <type>java.lang.String</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Specifies the included files</description>
+        </parameter>
+        <parameter>
+          <name>name</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The name of the Javadoc report.</description>
+        </parameter>
+        <parameter>
+          <name>outputDirectory</name>
+          <alias>destDir</alias>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Specifies the destination directory where pldoc saves the generated HTML files.</description>
+        </parameter>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>The Maven Project Object</description>
+        </parameter>
+        <parameter>
+          <name>reportOutputDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Specifies the destination directory where pldoc saves the generated HTML files.</description>
+        </parameter>
+        <parameter>
+          <name>sourceDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Specifies the source directory</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <applicationTitle implementation="java.lang.String" default-value="${project.name}">${application.title}</applicationTitle>
+        <description implementation="java.lang.String">${description}</description>
+        <destDir implementation="java.lang.String" default-value="sql-apidocs">${destDir}</destDir>
+        <includes implementation="java.lang.String" default-value="*.sql">${includes}</includes>
+        <name implementation="java.lang.String">${name}</name>
+        <outputDirectory implementation="java.io.File" default-value="${project.build.directory}/sql-apidocs">${destDir}</outputDirectory>
+        <project implementation="org.apache.maven.project.MavenProject">${project}</project>
+        <reportOutputDirectory implementation="java.io.File">${project.reporting.outputDirectory}/sql-apidocs</reportOutputDirectory>
+        <sourceDirectory implementation="java.io.File" default-value="${basedir}/src/sql">${sourceDirectory}</sourceDirectory>
+      </configuration>
+    </mojo>
+  </mojos>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.pldoc</groupId>
+      <artifactId>pldoc</artifactId>
+      <type>jar</type>
+      <version>0.9.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
+      <type>jar</type>
+      <version>2.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <type>jar</type>
+      <version>1.3.04</version>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+      <type>jar</type>
+      <version>2.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <type>jar</type>
+      <version>1.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-launcher</artifactId>
+      <type>jar</type>
+      <version>1.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.reporting</groupId>
+      <artifactId>maven-reporting-api</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>doxia</groupId>
+      <artifactId>doxia-sink-api</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-profile</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-manager</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-repository-metadata</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-provider-api</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <type>jar</type>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-8</version>
+    </dependency>
+    <dependency>
+      <groupId>classworlds</groupId>
+      <artifactId>classworlds</artifactId>
+      <type>jar</type>
+      <version>1.1-alpha-2</version>
+    </dependency>
+  </dependencies>
+</plugin>

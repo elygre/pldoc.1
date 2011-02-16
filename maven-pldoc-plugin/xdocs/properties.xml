@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>Maven PLDoc Plugin Properties</title>
+  </properties>
+  <body>
+    <section name="Maven PLDoc Plugin Settings">
+      <table>
+        <tr>
+          <th>Property</th>
+          <th>Optional?</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>maven.pldoc.application.title</td>
+          <td>Yes</td>
+          <td>Name of the application, appears in the generated documentation. Default value is ${pom.name}</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.src.dir</td>
+          <td>Yes</td>
+          <td>The location of the PL/SQL source code. Default value is ${basedir}/src/main/sql</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.build.dir</td>
+          <td>Yes</td>
+          <td>The location of the generated documentation (HTML files). Default value is ${maven.docs.dest}/pldoc</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.includes</td>
+          <td>Yes</td>
+          <td>Specifies a list of patterns to include in the documentation generation process. Default value is **/*.sql</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.inputencoding</td>
+          <td>Yes</td>
+          <td>The encoding used in the input files. Default value is the operating system default encoding.</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.overviewfile</td>
+          <td>Yes</td>
+          <td>The overview file in HTML format.</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.stylesheet</td>
+          <td>Yes</td>
+          <td>File with CSS-stylesheet for the result documentation. If omitted, default CSS will be used.</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.namescase</td>
+          <td>Yes</td>
+          <td>Upper/lower case to format PL/SQL names (upper | lower). If omitted, no case conversion is done.</td>
+        </tr>
+        <tr>
+          <td>maven.pldoc.exitonerror</td>
+          <td>Yes</td>
+          <td>"yes" forces program exit when some input file cannot be processed. If "no" (the default), the file is skipped and processing continues.</td>
+        </tr>
+      </table>
+    </section>
+  </body>
+</document>

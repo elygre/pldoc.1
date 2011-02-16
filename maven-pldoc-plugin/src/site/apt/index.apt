@@ -1,0 +1,37 @@
+Maven 2 PLDOc plugin.
+
+Similar in use with javadoc plugin.
+
+you need to add the following to your reporting section of your pom:
+
++-----+
+ <reporting>
+        <plugins>
+            <plugin>
+                <groupId>net.sourceforge.pldoc</groupId>
+                <artifactId>maven-pldoc-plugin</artifactId>
+                <version>2.0-SNAPSHOT</version>
+            </plugin>
+        </plugins>
+ </reporting>
++-----+
+
+
+Here is a example if you want to change the default configuration (location of sql files ... )
+
++-----+
+<plugin>
+	<groupId>net.sourceforge.pldoc</groupId>
+	<artifactId>maven-pldoc-plugin</artifactId>
+	<version>2.0-SNAPSHOT</version>
+	<configuration>
+		<applicationTitle>project-name</applicationTitle>
+		<sourceDirectory>src/sql</sourceDirectory>
+		<includes>*.sql</includes>
+		<reportOutputDirectory>target/site/apidocs</reportOutputDirectory>
+	</configuration>                    
+</plugin>
++-----+
+
+
+enjoy writing documentation...

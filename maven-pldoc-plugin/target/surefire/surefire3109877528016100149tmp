@@ -1,0 +1,5 @@
+#surefire
+#Wed Feb 16 22:24:30 CET 2011
+user.dir=C\:\\data\\pldoc.github\\master\\maven-pldoc-plugin
+localRepository=C\:\\Users\\Eirik Lygre\\.m2\\repository
+basedir=C\:\\data\\pldoc.github\\master\\maven-pldoc-plugin

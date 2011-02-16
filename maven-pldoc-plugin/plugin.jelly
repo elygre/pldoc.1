@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ant="jelly:ant" 
+		 xmlns:doc="doc"> 
+	
+	<goal name="pldoc" prereqs="pldoc:report" description="Executes pldoc:report"/>
+	
+	<ant:path id="pldoc.classpath">
+        <ant:pathelement path="${plugin.getDependencyClasspath()}"/>
+    </ant:path>
+	
+	<ant:taskdef name="pldoc" classname="net.sourceforge.pldoc.ant.PLDocTask">
+   		<ant:classpath>
+   			<ant:path refid="pldoc.classpath"/>
+   		</ant:classpath>
+   	</ant:taskdef>
+   	
+  	
+  	<goal name="pldoc:info" description="Prints plugin properties">
+  		<ant:echo>
+  maven.pldoc.application.title  = ${maven.pldoc.application.title}
+  maven.pldoc.src.dir            = ${maven.pldoc.src.dir}
+  maven.pldoc.build.dir          = ${maven.pldoc.build.dir}
+  maven.pldoc.includes           = ${maven.pldoc.includes}
+  maven.pldoc.inputencoding      = ${maven.pldoc.inputencoding}
+  maven.pldoc.overviewfile       = ${maven.pldoc.overviewfile}
+  maven.pldoc.stylesheet         = ${maven.pldoc.stylesheet}
+  maven.pldoc.namescase          = ${maven.pldoc.namescase}
+  		</ant:echo>
+  	</goal>
+  	
+  	<!-- Generates the JavaScript documentation -->
+	<goal name="pldoc:report" description="Generate Javadoc-like documentation for PL/SQL files">
+		<ant:pldoc verbose="yes"
+          destdir="${maven.pldoc.build.dir}"
+          doctitle="${maven.pldoc.application.title}"
+          exitOnError="${maven.pldoc.exitonerror}"
+          >
+            <!-- 
+            	setProperty set the Ant task attribute is the value is not null.
+            	If the value is null (not defined), the Ant attribute is not used.
+            -->
+          	<ant:setProperty name="inputEncoding" value="${maven.pldoc.inputencoding}"/>
+          	<ant:setProperty name="overview" value="${maven.pldoc.overviewfile}"/>
+          	<ant:setProperty name="stylesheet" value="${maven.pldoc.stylesheet}"/>
+          	<ant:setProperty name="namesCase" value="${maven.pldoc.namescase}"/>
+			<!--
+				Filters the files to process
+			-->
+       		<ant:fileset dir="${maven.pldoc.src.dir}" includes="${maven.pldoc.includes}"/>
+        </ant:pldoc>
+	</goal>
+
+  	<goal name="pldoc:register">
+	    <doc:registerReport 
+	      name="PL/SQL Documentation" 
+	      link="pldoc/index"
+	      description="PL/SQL Documentation"/>
+  	</goal>
+  	
+  	<goal name="pldoc:deregister">
+	  <doc:deregisterReport name="PL/SQL Documentation"/>
+	</goal>
+	
+</project>

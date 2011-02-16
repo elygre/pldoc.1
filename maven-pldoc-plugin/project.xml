@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <pomVersion>1</pomVersion>
+    <artifactId>maven-pldoc-plugin</artifactId>
+    <groupId>maven-pldoc-plugin</groupId>
+    <reports>
+        <report>maven-linkcheck-plugin</report>
+    </reports>
+    <name>Maven PLDoc Plugin</name>
+    <currentVersion>1.0.0</currentVersion>
+    <inceptionYear>2006</inceptionYear>
+    <organization>
+		<name>SourceForge</name>
+		<url>http://sourceforge.net/</url>
+		<logo>http://sourceforge.net/sflogo.php?group_id=38875&type=5</logo>
+    </organization>
+    <url>http://pldoc.sourceforge.net/maven-pldoc-plugin</url>
+    <versions>
+    	<version>
+    		<name>Maven PLDoc plugin v1.0.0</name>
+    		<tag>1.0.0</tag>
+    		<id>1.0.0</id>
+    	</version>
+    </versions>
+    <developers>
+        <developer>
+            <id>Christophe Grosjean</id>
+            <name>Christope Grosjean</name>
+            <email>toche_@users.sourceforge.net</email>
+            <organization>Sourceforge</organization>
+            <organizationUrl>http://www.sourceforge.net</organizationUrl>
+        </developer>
+    </developers>
+    <dependencies>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xerces</artifactId>
+            <version>2.4.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.0.b2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>pldoc</groupId>
+            <artifactId>pldoc</artifactId>
+            <version>0.8.2</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <!-- This section is compulsory -->
+        <resources>
+            <resource>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>plugin.jelly</include>
+                    <include>plugin.properties</include>
+                    <include>project.properties</include>
+                    <include>project.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>
+
