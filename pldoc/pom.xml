@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>pldoc</artifactId>
+    <name>PLDoc - ${project.version}</name>
+    <groupId>net.sourceforge.pldoc</groupId>
+    <packaging>jar</packaging>
+    <description>Documentation tool for PLSQL</description>
+    <version>0.9.1-SNAPSHOT</version>
+    <url>http://pldoc.sourceforge.net</url>
+    <licenses>
+        <license>
+            <distribution>repo</distribution>
+            <name>lgpl</name>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
+        </license>
+    </licenses>
+    <issueManagement>
+        <system>PLDoc Tracker</system>
+        <url>https://sourceforge.net/tracker/?group_id=38875</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:cvs:pserver:anonymous@pldoc.cvs.sourceforge.net:/cvsroot/pldoc:sources</connection>
+        <developerConnection>scm:cvs:pserver:username@pldoc.cvs.sourceforge.net:/cvsroot/pldoc:sources</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://pldoc.cvs.sourceforge.net/viewvc/pldoc/sources/</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Albert Tumanov</name>
+            <id>altumano</id>
+            <email>altumano at users.sourceforge.net</email>
+            <roles>
+                <role>Project Manager</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Arthur Cieslik</name>
+            <id>cieslik</id>
+            <email>cieslik at users.sourceforge.net</email>
+            <roles>
+                <role>Software Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Andras Soltesz</name>
+            <id>soltesz_andras</id>
+            <email>soltesz_andras at users.sourceforge.net</email>
+            <roles>
+                <role>Software Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Christophe Grosjean</name>
+            <id>toche_</id>
+            <email>toche_ at users.sourceforge.net</email>
+            <roles>
+                <role>Software Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Zoltan Farkas</name>
+            <id>zolyfarkas</id>
+            <email>zolyfarkas at users.sourceforge.net</email>
+            <roles>
+                <role>Software Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>release.pldoc.sf.net</id>
+            <name>PLDoc Release Repository</name>
+            <url>scp://shell.sourceforge.net/home/groups/p/pl/pldoc/htdocs/m2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshot.pldoc.sf.net</id>
+            <name>PLDoc Snapshot Repository</name>
+            <url>scp://shell.sourceforge.net/home/groups/p/pl/pldoc/htdocs/m2-snapshot/</url>
+        </snapshotRepository>
+        <site>
+            <id>site.pldoc.sf.net</id>
+            <name>PLDoc Site</name>
+            <url>scp://shell.sourceforge.net/home/groups/p/pl/pldoc/htdocs/maven-site/</url>
+        </site>
+    </distributionManagement>
+
+    <build>
+        <sourceDirectory>src/java</sourceDirectory>
+        <testSourceDirectory>test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/resources</directory>
+                <targetPath>resources</targetPath>
+            </resource>
+        </resources>
+   
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javacc-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/javacc/concat</sourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javacc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <concat destfile="${basedir}/src/javacc/concat/PLSQL.jj">
+                                    <fileset dir="${basedir}/src/javacc">
+                                        <include name="Parser.jj" />
+                                        <include name="Tokens.jj" />
+                                        <include name="Productions.jj" />
+                                        <include name="ProductionsDDL.jj" />
+                                    </fileset>
+                                </concat>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+				<version>[2.7,)</version>
+                <configuration>
+                    <javadocVersion>1.5</javadocVersion>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changelog-maven-plugin</artifactId>
+				<version>[2.7,)</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+				<version>[2.7,)</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>[2.7,)</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>
+

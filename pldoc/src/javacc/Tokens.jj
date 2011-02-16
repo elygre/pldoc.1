@@ -1,0 +1,394 @@
+// Copyright (C) 2002 Albert Tumanov
+
+/* WHITE SPACE */
+
+SKIP :
+{
+  " " | "\t" | "\n" | "\r" | "\f"
+}
+
+/* COMMENTS */
+
+MORE :
+{
+  <"/**" ~["/"]> : IN_FORMAL_COMMENT
+|
+  "/*" : IN_MULTI_LINE_COMMENT
+}
+
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "--"(~["\n","\r"])* ("\n"|"\r"|"\r\n")?>
+}
+
+<IN_FORMAL_COMMENT>
+SPECIAL_TOKEN :
+{
+  <FORMAL_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <MULTI_LINE_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_SQL_STATEMENT_ENDED_SEMICOLON>
+SKIP :
+{
+  <SQL_STATEMENT: ";" > : DEFAULT
+}
+
+<IN_FORMAL_COMMENT, IN_MULTI_LINE_COMMENT,
+ IN_SQL_STATEMENT_ENDED_SEMICOLON>
+MORE :
+{
+  < ~[] >
+}
+
+/* PSEUDO-RESERVED WORDS */
+
+TOKEN [IGNORE_CASE]:
+{
+<REPLACE: "REPLACE"> |
+<DEFINER: "DEFINER"> |
+<CURRENT_USER: "CURRENT_USER"> |
+<SERIALLY_REUSABLE: "SERIALLY_REUSABLE"> |
+<RESTRICT_REFERENCES: "RESTRICT_REFERENCES"> |
+<EXCEPTION_INIT: "EXCEPTION_INIT"> |
+<AUTONOMOUS_TRANSACTION: "AUTONOMOUS_TRANSACTION"> |
+<LANGUAGE: "LANGUAGE">
+}
+
+/* PL/SQL RESERVED WORDS */
+
+TOKEN [IGNORE_CASE]:
+{
+<ALL: "ALL"> |
+<ADD: "ADD"> |
+<ALTER: "ALTER"> |
+<AND: "AND"> |
+<ANY: "ANY"> |
+<ARRAY: "ARRAY"> |
+<AS: "AS"> |
+<ASC: "ASC"> |
+<AT: "AT"> |
+<AUTHID: "AUTHID"> |
+<AVG: "AVG"> |
+<BEGIN: "BEGIN"> |
+<BETWEEN: "BETWEEN"> |
+<BINARY_INTEGER: "BINARY_INTEGER"> |
+<BODY: "BODY"> |
+<BOOLEAN: "BOOLEAN"> |
+<BULK: "BULK"> |
+<BY: "BY"> |
+<BYTE: "BYTE"> |
+<CASE: "CASE"> |
+<CASCADE: "CASCADE"> |
+<CHAR: "CHAR"> |
+<CHAR_BASE: "CHAR_BASE"> |
+<CHECK: "CHECK"> |
+<CLOSE: "CLOSE"> |
+<CLUSTER: "CLUSTER"> |
+<COALESCE: "COALESCE"> |
+<COLLECT: "COLLECT"> |
+<COLUMN: "COLUMN"> |
+<COMMENT: "COMMENT"> |
+<COMMIT: "COMMIT"> |
+<COMPRESS: "COMPRESS"> |
+<CONNECT: "CONNECT"> |
+<CONSTANT: "CONSTANT"> |
+<CREATE: "CREATE"> |
+<CURRENT: "CURRENT"> |
+<CURRVAL: "CURRVAL"> |
+<CURSOR: "CURSOR"> |
+<DATE: "DATE"> |
+<DAY: "DAY"> |
+<DECLARE: "DECLARE"> |
+<DECIMAL: "DECIMAL"> |
+<_DEFAULT: "DEFAULT"> |
+<DELETE: "DELETE"> |
+<DESC: "DESC"> |
+<DETERMINISTIC: "DETERMINISTIC"> |
+<DISTINCT: "DISTINCT"> |
+<DO: "DO"> |
+<DROP: "DROP"> |
+<ELSE: "ELSE"> |
+<ELSIF: "ELSIF"> |
+<END: "END"> |
+<EXCEPTION: "EXCEPTION"> |
+<EXCLUSIVE: "EXCLUSIVE"> |
+<EXECUTE: "EXECUTE"> |
+<EXISTS: "EXISTS"> |
+<EXIT: "EXIT"> |
+<EXTENDS: "EXTENDS"> |
+<EXTRACT: "EXTRACT"> |
+<FALSE: "FALSE"> |
+<FETCH: "FETCH"> |
+<FINAL: "FINAL"> |
+<FLOAT: "FLOAT"> |
+<FOR: "FOR"> |
+<FORALL: "FORALL"> |
+<FROM: "FROM"> |
+<FUNCTION: "FUNCTION"> |
+<GOTO: "GOTO"> |
+<GROUP: "GROUP"> |
+<HAVING: "HAVING"> |
+<HEAP: "HEAP"> |
+<HOUR: "HOUR"> |
+<IF: "IF"> |
+<IMMEDIATE: "IMMEDIATE"> |
+<IN: "IN"> |
+<INDEX: "INDEX"> |
+<INDEXTYPE: "INDEXTYPE"> |
+<INDICATOR: "INDICATOR"> |
+<INSERT: "INSERT"> |
+<INTEGER: "INTEGER"> |
+<INTERFACE: "INTERFACE"> |
+<INTERSECT: "INTERSECT"> |
+<INTERVAL: "INTERVAL"> |
+<INTO: "INTO"> |
+<IS: "IS"> |
+<ISOLATION: "ISOLATION"> |
+<JAVA: "JAVA"> |
+<LEVEL: "LEVEL"> |
+<LIKE: "LIKE"> |
+<LIMITED: "LIMITED"> |
+<LOCK: "LOCK"> |
+<LONG: "LONG"> |
+<LOOP: "LOOP"> |
+<MAP: "MAP"> |
+<MAX: "MAX"> |
+<MEMBER: "MEMBER"> |
+<MIN: "MIN"> |
+<MINUS: "MINUS"> |
+<MINUTE: "MINUTE"> |
+<MLSLABEL: "MLSLABEL"> |
+<MOD: "MOD"> |
+<MODE: "MODE"> |
+<MONTH: "MONTH"> |
+<NATURAL: "NATURAL"> |
+<NATURALN: "NATURALN"> |
+<NEW: "NEW"> |
+<NEXTVAL: "NEXTVAL"> |
+<NOCOPY: "NOCOPY"> |
+<NOT: "NOT"> |
+<NOWAIT: "NOWAIT"> |
+<NULL: "NULL"> |
+<NULLIF: "NULLIF"> |
+<NUMBER: "NUMBER"> |
+<NUMBER_BASE: "NUMBER_BASE"> |
+<OBJECT: "OBJECT"> |
+<OCIROWID: "OCIROWID"> |
+<OF: "OF"> |
+<ON: "ON"> |
+<OPAQUE: "OPAQUE"> |
+<OPEN: "OPEN"> |
+<OPERATOR: "OPERATOR"> |
+<OPTION: "OPTION"> |
+<OR: "OR"> |
+<ORDER: "ORDER"> |
+<ORGANIZATION: "ORGANIZATION"> |
+<OTHERS: "OTHERS"> |
+<OUT: "OUT"> |
+<PACKAGE: "PACKAGE"> |
+<PARALLEL_ENABLE: "PARALLEL_ENABLE"> |
+<PARTITION: "PARTITION"> |
+<PCTFREE: "PCTFREE"> |
+<PIPELINED: "PIPELINED"> |
+<PLS_INTEGER: "PLS_INTEGER"> |
+<POSITIVE: "POSITIVE"> |
+<POSITIVEN: "POSITIVEN"> |
+<PRAGMA: "PRAGMA"> |
+<PRIOR: "PRIOR"> |
+<PRIVATE: "PRIVATE"> |
+<PROCEDURE: "PROCEDURE"> |
+<PUBLIC: "PUBLIC"> |
+<RAISE: "RAISE"> |
+<RANGE: "RANGE"> |
+<RAW: "RAW"> |
+<REAL: "REAL"> |
+<RECORD: "RECORD"> |
+<REF: "REF"> |
+<RELEASE: "RELEASE"> |
+<RETURN: "RETURN"> |
+<REVERSE: "REVERSE"> |
+<ROLLBACK: "ROLLBACK"> |
+<ROW: "ROW"> |
+<ROWID: "ROWID"> |
+<ROWNUM: "ROWNUM"> |
+<ROWTYPE: "ROWTYPE"> |
+<SAVEPOINT: "SAVEPOINT"> |
+<SECOND: "SECOND"> |
+<SELECT: "SELECT"> |
+<SEPARATE: "SEPARATE"> |
+<SET: "SET"> |
+<SHARE: "SHARE"> |
+<SMALLINT: "SMALLINT"> |
+<SPACE: "SPACE"> |
+<SQL: "SQL"> |
+<SQLCODE: "SQLCODE"> |
+<SQLERRM: "SQLERRM"> |
+<START: "START"> |
+<STDDEV: "STDDEV"> |
+<SUBTYPE: "SUBTYPE"> |
+<SUCCESSFUL: "SUCCESSFUL"> |
+<SUM: "SUM"> |
+<SYNONYM: "SYNONYM"> |
+<SYSDATE: "SYSDATE"> |
+<TABLE: "TABLE"> |
+<THEN: "THEN"> |
+<TIME: "TIME"> |
+<TIMESTAMP: "TIMESTAMP"> |
+<TIMEZONE_REGION: "TIMEZONE_REGION"> |
+<TIMEZONE_ABBR: "TIMEZONE_ABBR"> |
+<TIMEZONE_MINUTE: "TIMEZONE_MINUTE"> |
+<TIMEZONE_HOUR: "TIMEZONE_HOUR"> |
+<TO: "TO"> |
+<TRIGGER: "TRIGGER"> |
+<TRUE: "TRUE"> |
+<TYPE: "TYPE"> |
+<UI: "UI"> |
+<UNDER: "UNDER"> |
+<WHEN: "WHEN"> |
+
+// are they reserved or not ?
+// most are not reserved, but cannot use just "WHERE" etc instead - resolves as identifier !
+<WHERE: "WHERE"> |
+<WHILE: "WHILE"> |
+<UPDATE: "UPDATE"> |
+<VARCHAR: "VARCHAR"> |
+<VARCHAR2: "VARCHAR2"> |
+<DOUBLE: "DOUBLE"> |
+<DEC: "DEC"> |
+<PRECISION: "PRECISION"> |
+<INT: "INT"> |
+<NUMERIC: "NUMERIC"> |
+<SIGNTYPE: "SIGNTYPE"> |
+<NCHAR: "NCHAR"> |
+<NVARCHAR2: "NVARCHAR2"> |
+<STRING: "STRING"> |
+<UROWID: "UROWID"> |
+<VARRAY: "VARRAY"> |
+<VARYING: "VARYING"> |
+<BFILE: "BFILE"> |
+<BLOB: "BLOB"> |
+<CLOB: "CLOB"> |
+<NCLOB: "NCLOB"> |
+<YEAR: "YEAR"> |
+<LOCAL: "LOCAL"> |
+<WITH: "WITH"> |
+<ZONE: "ZONE"> |
+<CHARACTER: "CHARACTER"> |
+<VIEW: "VIEW"> |
+<UNION: "UNION"> |
+<GLOBAL_TEMPORARY: "GLOBAL TEMPORARY">
+}
+
+TOKEN :
+{
+< #LETTER: ["A"-"Z"] | ["a"-"z"]>
+|
+< #DIGIT: ["0"-"9"]>
+|
+< #_CHARACTER: <_CHARACTER_WO_ASTERISK> | "'" >
+|
+< #_CHARACTER_WO_ASTERISK: <LETTER> | <DIGIT> | "(" | ")" | "+" | "-" | "*" | "/" | "<" | ">"
+ | "=" | "!" | "~" | "^" | ";" | ":" | "." | "@" | "%" | "," | "\"" | "#"
+ | "$" | "&" | "_" | "|" | "{" | "}" | "?" | "[" | "]"
+ | " " | "\t" >
+|
+< #DELIMITER: "+" | "%" | "'" | "\"" | "." | "/" | "(" | ")" | ":" | "," | "*" | "=" | "<" | ">" | "@" | ";" | "-">
+|
+< IDENTIFIER:
+  ( <LETTER> ( <LETTER> | <DIGIT> | "$" | "_" | "#" )* )
+  |
+  ( "\"" (<_CHARACTER_WO_ASTERISK>)* "\"" )
+>
+|
+
+< UNSIGNED_NUMERIC_LITERAL: <FLOAT_LITERAL> ( ["e","E"] (["-","+"])? <FLOAT_LITERAL> )? >
+|
+< #FLOAT_LITERAL: <INTEGER_LITERAL> ( "." <INTEGER_LITERAL> )? | "." <INTEGER_LITERAL> >
+|
+< #INTEGER_LITERAL: ( <DIGIT> )+ >
+|
+
+< #_WHATEVER_CHARACTER_WO_ASTERISK: (~["'"]) >
+|
+< CHARACTER_LITERAL: "'" (<_WHATEVER_CHARACTER_WO_ASTERISK>)? "'" >
+|
+< STRING_LITERAL: "'" (<_WHATEVER_CHARACTER_WO_ASTERISK> | "''")* "'" >
+|
+< #BOOLEAN_LITERAL: "TRUE" | "FALSE" >
+}
+
+Token ID(): {}
+{
+  (<IDENTIFIER>
+  |
+  <REPLACE> | <DEFINER> | <CURRENT_USER> | <SERIALLY_REUSABLE> | <RESTRICT_REFERENCES> |
+  <EXCEPTION_INIT> | <AUTONOMOUS_TRANSACTION> | <LANGUAGE>
+  |
+  <ALL> | <ALTER> | <AND> | <ANY> | <ARRAY> | <AS> | <ASC> | <AT> | <AUTHID> | <AVG> |
+  //  <BEGIN> |
+  <BETWEEN> | <BINARY_INTEGER> | <BODY> | <BOOLEAN> | <BULK> | <BY> |
+  <CASE> | <CHAR> | <CHAR_BASE> | <CHECK> | <CLOSE> | <CLUSTER> | <COALESCE> |
+  <COLLECT> | <COMMENT> | <COMMIT> | <COMPRESS> | <CONNECT> | <CONSTANT> | <CREATE> |
+  <CURRENT> | <CURRVAL> | <CURSOR> | <DATE> | <DAY> | <DECLARE> | <DECIMAL> |
+  <_DEFAULT> | <DELETE> | <DESC> | <DISTINCT> | <DO> | <DROP> | <ELSE> | <ELSIF> |
+  // <END> |
+  <EXCEPTION> | <EXCLUSIVE> | <EXECUTE> | <EXISTS> | <EXIT> | <EXTENDS> |
+  <EXTRACT> | <FALSE> | <FETCH> | <FLOAT> | <FOR> | <FORALL> | <FROM> |
+  // <FUNCTION> |  // this causes bug 643043 Procedure w/o params appears as variable
+  <GOTO> | <GROUP> | <HAVING> | <HEAP> | <HOUR> | <IF> | <IMMEDIATE> | <IN> |
+  <INDEX> | <INDICATOR> | <INSERT> | <INTEGER> | <INTERFACE> | <INTERSECT> | <INTERVAL> |
+  <INTO> | <IS> | <ISOLATION> | <JAVA> | <LEVEL> | <LIKE> | <LIMITED> | <LOCK> |
+  <LONG> | <LOOP> | <MAX> | <MIN> | <MINUS> | <MINUTE> | <MLSLABEL> | <MOD> | <MODE> |
+  <MONTH> | <NATURAL> | <NATURALN> | <NEW> | <NEXTVAL> | <NOCOPY> | <NOT> | <NOWAIT> |
+  <NULL> | <NULLIF> | <NUMBER> | <NUMBER_BASE> | <OCIROWID> | <OF> | <ON> | <OPAQUE> |
+  <OPEN> | <OPERATOR> | <OPTION> | <OR> | <ORDER> | <ORGANIZATION> | <OTHERS> | <OUT> |
+  <PACKAGE> | <PARTITION> | <PCTFREE> | <PLS_INTEGER> | <POSITIVE> | <POSITIVEN> |
+  // <PRAGMA> |
+  <PRIOR> | <PRIVATE> |
+  //  <PROCEDURE> | // this causes bug 643043 Procedure w/o params appears as variable
+  <PUBLIC> | <RAISE> | <RANGE> | <RAW> | <REAL> |
+  <RECORD> | <REF> | <RELEASE> | <RETURN> | <REVERSE> | <ROLLBACK> | <ROW> | <ROWID> |
+  <ROWNUM> | <ROWTYPE> | <SAVEPOINT> | <SECOND> | <SELECT> | <SEPARATE> | <SET> | <SHARE> |
+  <SMALLINT> | <SPACE> | <SQL> | <SQLCODE> | <SQLERRM> | <START> | <STDDEV> | <SUBTYPE> |
+  <SUCCESSFUL> | <SUM> | <SYNONYM> | <SYSDATE> | <TABLE> | <THEN> | <TIME> | <TIMESTAMP> |
+  <TIMEZONE_REGION> | <TIMEZONE_ABBR> | <TIMEZONE_MINUTE> | <TIMEZONE_HOUR> | <TO> | <TRIGGER> |
+  <TRUE> | <TYPE> | <UI> | <UPDATE>
+  |
+  <VARCHAR> | <VARCHAR2> | <DOUBLE> | <DEC> | <PRECISION> | <INT> |
+  <NUMERIC> | <SIGNTYPE> | <NCHAR> | <NVARCHAR2> | <STRING> | <UROWID> | <VARRAY> | <VARYING> | <BFILE> |
+  <BLOB> | <CLOB> | <NCLOB> | <YEAR> | <LOCAL> | <WITH> | <ZONE> | <CHARACTER>)
+  { return token; }
+}
+
+Token typeKeyword(): {}
+{
+  (
+  <BOOLEAN> | <DATE> | <NUMBER> | <FLOAT> | <REAL> | <INTEGER> | <INT> | <SMALLINT>
+  | <DECIMAL> | <NUMERIC> | <DEC> | <BINARY_INTEGER> | <NATURAL> | <NATURALN>
+  | <POSITIVE> | <POSITIVEN> | <SIGNTYPE> | <VARCHAR2> | <VARCHAR> | <STRING> |
+  <LONG> | <RAW> | <ROWID> | <CHAR> | <CHARACTER> | <MLSLABEL> | <BLOB> | <CLOB> | <BFILE> |
+  <NCHAR> | <NVARCHAR2> | <NCLOB> | <PLS_INTEGER> | <TIME> | <TIMESTAMP> | <UROWID> |
+//
+  <ARRAY> | <AUTHID> |
+  <CHAR_BASE> |
+  <CURRVAL> |
+  <HOUR> |
+  <INTERVAL> |
+  <MONTH> |
+  <NUMBER_BASE> | <OCIROWID> |
+  <RECORD> | <REF> |
+  <ROW> |
+  <ROWNUM> |
+  <ROWTYPE> | <SECOND> | <SET> |
+  <TABLE> |
+  <TIMEZONE_REGION> | <TIMEZONE_ABBR> | <TIMEZONE_MINUTE> | <TIMEZONE_HOUR> |   <DOUBLE> | <PRECISION> |
+  <VARRAY> |
+  <YEAR> | <LOCAL> | <WITH> | <ZONE>)
+  { return token; }
+}

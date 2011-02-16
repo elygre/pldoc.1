@@ -1,0 +1,350 @@
+/* Copyright (C) 2002 Albert Tumanov
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+*/
+
+// $Header: /cvsroot/pldoc/sources/src/javacc/Parser.jj,v 1.8 2004/07/21 09:41:38 altumano Exp $
+//
+options {
+  //DEBUG_PARSER = true; DEBUG_TOKEN_MANAGER = true;
+  IGNORE_CASE = true;
+  STATIC = false;
+  LOOKAHEAD = 1;
+  DEBUG_LOOKAHEAD = false;
+  CHOICE_AMBIGUITY_CHECK = 3;
+  OTHER_AMBIGUITY_CHECK = 1;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = true;
+  UNICODE_INPUT = false;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(PLSQLParser)
+
+/* Copyright (C) 2002 Albert Tumanov
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+*/
+
+package net.sourceforge.pldoc.parser;
+
+import java.io.*;
+import java.util.*;
+import org.xml.sax.SAXException;
+import org.w3c.dom.*;
+import net.sourceforge.pldoc.*;
+import uk.co.anyware.html.HTMLEscaper;
+import org.xml.sax.SAXException;
+
+public class PLSQLParser {
+
+  private XMLWriter m_out;
+  private boolean ignoreInformalComments = false;
+  private boolean namesUppercase = false;
+  private boolean namesLowercase = false;
+
+  /** Sets the stream to receive output XML text.
+  */
+  public void setXMLWriter(XMLWriter out)
+  {
+    m_out = out;
+  }
+
+  /**
+  * Sets to ignore informal comments (default false).
+  */
+  public void setIgnoreInformalComments(boolean ignoreInformalComments)
+  {
+    this.ignoreInformalComments = ignoreInformalComments;
+  }
+
+  /**
+  * Sets conversion of all PL/SQL identifiers to uppercase (default false).
+  */
+  public void setNamesUppercase(boolean namesUppercase)
+  {
+    this.namesUppercase = namesUppercase;
+  }
+
+  /**
+  * Sets conversion of all PL/SQL identifiers to lowercase (default false).
+  */
+  public void setNamesLowercase(boolean namesLowercase)
+  {
+    this.namesLowercase = namesLowercase;
+  }
+
+  /** Processes a package comment.
+  * Searches for possible package-level formal comment before the current token.
+  * If found, generates COMMENT element for the package.
+  */
+  private void processPackageComment(Token token)
+      throws SAXException {
+    Hashtable packageCommentTags = new Hashtable();
+    String packageComment = null;
+
+    // get the text, if present
+    if (token != null && token.specialToken != null) {
+      token = token.specialToken;
+      int kind = token.kind;
+      String comment = token.toString();
+      if (comment != null && kind == FORMAL_COMMENT) {
+        CommentParser commentParser = new CommentParser(comment);
+        // get the package comment text
+        packageComment = commentParser.getText();
+        if (packageComment != null) {
+          // extract tags from the package comment
+          packageCommentTags.putAll(commentParser.getTags());
+        }
+      }
+    }
+
+    // print the package comment
+    printPackageComment(packageComment, packageCommentTags);
+  }
+
+  /** Processes a package member.
+  * Searches for possible package-level comment before the member.
+  * If found, generates COMMENT element for the package.
+  * For the package member, generates open tag with the given element name
+  * with memberName as NAME attribute.
+  * Inserts COMMENT_FIRST_LINE and COMMENT elements.
+  * Closing member tag is NOT added.
+  * @return table of tags found in the formal comment
+  */
+  private Hashtable processMemberComment(Token token, String elementName, String memberName)
+      throws SAXException {
+    String commentFirstLine = null, commentAll = null;
+    String packageComment = null, returnComment = null;
+    Hashtable tags = new Hashtable();
+    Hashtable packageCommentTags = new Hashtable();
+
+    // Should handle multiple comment blocks ? Then use "while".
+    // Otherwise, use "if".
+    while (token.specialToken != null) {
+
+      token = token.specialToken;
+      int kind = token.kind;
+      String comment = token.toString();
+
+      if (comment != null && (kind == FORMAL_COMMENT || ! ignoreInformalComments)) {
+
+        CommentParser commentParser = new CommentParser(comment);
+        // get package comment, if any
+        packageComment = commentParser.getPackageComment();
+        if (packageComment != null) {
+          // extract tags from package comment
+          packageCommentTags.putAll(commentParser.getTags());
+        }
+
+        // only the main sentence from the first comment block is used, others are ignored
+        if (commentFirstLine == null) {
+          commentFirstLine = commentParser.getMainSentence();
+          if (kind != FORMAL_COMMENT) {
+            if(ignoreInformalComments) {
+              // ignore informal comments
+              commentFirstLine = "";
+            } else {
+              // informal comment may have "<" etc inside
+              commentFirstLine = HTMLEscaper.escape(commentFirstLine);
+            }
+          }
+        }
+
+        // only the comment text from the first comment block is used, others are ignored
+        if (commentAll == null) {
+          commentAll = commentParser.getText();
+          if (kind != FORMAL_COMMENT) {
+            if(ignoreInformalComments) {
+              // ignore informal comments
+              commentAll = "";
+            } else {
+              // informal comment may have "<" etc inside
+              commentAll = HTMLEscaper.escape(commentAll);
+            }
+          }
+        }
+
+        // tags are out together (duplicate names will be overwritten)
+        tags.putAll(commentParser.getTags());
+
+      }
+
+    }
+
+    // print package-level stuff
+    printPackageComment(packageComment, packageCommentTags);
+
+    // now start the program unit
+    m_out.pushAttribute("NAME", purifyIdentifier(memberName));
+    m_out.startElement(purifyIdentifier(elementName));
+    if (commentFirstLine != null) {
+      m_out.startElement("COMMENT_FIRST_LINE");
+      m_out.cdata(commentFirstLine);
+      m_out.endElement("COMMENT_FIRST_LINE");
+    }
+    if (commentAll != null) {
+      m_out.startElement("COMMENT");
+      m_out.cdata(commentAll);
+      m_out.endElement("COMMENT");
+    }
+    return tags;
+  }
+
+  /** Prints the package comment into the stream.
+  */
+  private void printPackageComment(String packageComment, Hashtable packageCommentTags)
+      throws SAXException {
+    // print package-level stuff
+    if (packageComment != null) {
+      // print package comment, it goes under PACKAGE tag
+      m_out.startElement("COMMENT");
+      m_out.cdata(packageComment);
+      m_out.endElement("COMMENT");
+
+      // modified by Steve Holt - start
+
+      // print TAGs
+      String comment = null;
+
+      Iterator keyIt = packageCommentTags.keySet().iterator();
+      while (keyIt.hasNext()) {
+
+        String key = (String)keyIt.next();
+        Collection tagValues = (Collection) packageCommentTags.get(key);
+        if (tagValues != null) {
+          for(Iterator it = tagValues.iterator(); it.hasNext(); ) {
+            comment = (String) it.next();
+            m_out.pushAttribute("TYPE", purifyIdentifier(key));
+            m_out.startElement("TAG");
+            if (comment != null) {
+              m_out.startElement("COMMENT");
+              m_out.cdata(comment);
+              m_out.endElement("COMMENT");
+            }
+            m_out.endElement("TAG");
+          }
+        }
+      }
+
+      // modified by Steve Holt - end
+
+    }
+  }
+
+  /**
+  * Gets the comment for the parameter named <code>paramName</code> from the table of tags.
+  *
+  * @param paramName	name of the parameter
+  * @param tags		table of tags
+  * @return		comment or <code>null</code> if comment not found
+  */
+  private String getParamComment(String paramName, Hashtable tags)
+  {
+    String paramComment = null;
+    Collection tagValues = (Collection) tags.get("@param");
+    if (tagValues != null) {
+      Iterator it = tagValues.iterator();
+      while (it.hasNext()) {
+        String value = (String) it.next();
+
+        // extract parameter name
+        String extractedParamName = null;
+        // use tokenizer, because tokens maybe separated by spaces or tabs
+        StringTokenizer st = new StringTokenizer(value);
+        // extract parameter name, the rest is the comment
+        if (st.hasMoreTokens()) {
+          extractedParamName = st.nextToken();
+        }
+
+        if (extractedParamName != null && extractedParamName.equalsIgnoreCase(paramName)) {
+          int paramCommentStart = value.indexOf(extractedParamName) + extractedParamName.length() + 1;
+          if (paramCommentStart < value.length()) {
+            paramComment = value.substring(paramCommentStart).trim();
+          }
+          break;
+        }
+      }
+    }
+    return paramComment;
+  }
+
+
+  /** Purifies an identifier: changes to uppercase, removes quotes.
+  */
+  private String purifyIdentifier(String name)
+  {
+    // change case as requested in settings
+    if (namesUppercase) {
+      name = name.toUpperCase();
+    }
+    if (namesLowercase) {
+      name = name.toLowerCase();
+    }
+
+    // remove double quotes
+    StringBuffer s = new StringBuffer(name);
+    for (int i=0; i<s.length(); i++) {
+      if (s.charAt(i) == '"') {
+        s.deleteCharAt(i);
+        i--;
+      }
+    }
+    return s.toString();
+  }
+
+  /**
+   * main method, for testing only.
+   * @param args
+   */
+  public static void main(String[] args)
+      throws ParseException, SAXException {
+
+    PLSQLParser parser = new PLSQLParser(System.in);
+    parser.input();
+
+    String s;
+    s = "qwerty";
+    System.out.println(s + " -> " + parser.purifyIdentifier(s));
+    s = "\"qwerty\"";
+    System.out.println(s + " -> " + parser.purifyIdentifier(s));
+    s = "\"qwerty\".uiop";
+    System.out.println(s + " -> " + parser.purifyIdentifier(s));
+    s = "\"qwerty\".\"uiop\"";
+    System.out.println(s + " -> " + parser.purifyIdentifier(s));
+  }
+
+}
+
+PARSER_END(PLSQLParser)
