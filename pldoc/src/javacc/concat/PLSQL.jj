@@ -768,10 +768,7 @@ void programUnit(boolean isPackageLevel) throws SAXException :
 
     }
   }
-  [<DETERMINISTIC>]
-  [<PARALLEL_ENABLE>]
-  [<PIPELINED>]
-  [<CASCADE>]
+  (<DETERMINISTIC> | <PARALLEL_ENABLE> | <PIPELINED> | <CASCADE> | <RESULT_CACHE>)*
   // body
   [
     (<IS> | <AS>)
@@ -1187,6 +1184,8 @@ void expression() : {}
   |
   "**" expression()
   |
+  <CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>
+  |
   (
     expressionTerm()
     ( LOOKAHEAD(2) (<AND> | <OR> | "||" | "+" | "-" | "*" | "/") expression() )*
@@ -1218,6 +1217,10 @@ String expression() :
 { String result = "", fname = ""; Token token = null;}
 {
   (
+  LOOKAHEAD(2) (<CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
+  |
+  LOOKAHEAD(2) (<CASE> expression() <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
+  |
   ("(" result = expression() ")")
   |
   (
@@ -1744,6 +1747,7 @@ TOKEN [IGNORE_CASE]:
 <RECORD: "RECORD"> |
 <REF: "REF"> |
 <RELEASE: "RELEASE"> |
+<RESULT_CACHE: "RESULT_CACHE"> |
 <RETURN: "RETURN"> |
 <REVERSE: "REVERSE"> |
 <ROLLBACK: "ROLLBACK"> |
