@@ -7,7 +7,7 @@ void input() throws SAXException : {}
 			LOOKAHEAD(6) packageSpec() 
 		| 	LOOKAHEAD(4) typeSpec() 
 		|	alterType()
-			/*TODO package body parsing not supported | LOOKAHEAD(6) packageBody() */ 
+//		|	grant()
 		| sqlPlusCommand() 
 		| LOOKAHEAD(6) table() 
 		| view() 
@@ -24,6 +24,11 @@ void sqlPlusCommand() : {}
   // e.g. SHOW ERRORS, GRANT EXECUTE ON ... TO ...
   (LOOKAHEAD(2) (<IDENTIFIER>["."<IDENTIFIER>] | <EXECUTE> | <SET> | <ON> | <TO> | <PUBLIC> | "(" | ")" | <STRING_LITERAL>) )+
   [";"]
+}
+
+void grant() : {}
+{
+	<GRANT> ID() <ON> ID() <TO> (<PUBLIC> | <STRING_LITERAL>) [";"]
 }
 
 /** Recognizes a numeric literal.
@@ -102,20 +107,15 @@ void declarativeSection(boolean isPackageLevel) throws SAXException :
     record_type_definition(isPackageLevel) |
     LOOKAHEAD(2)
     recordDeclaration(isPackageLevel) |
-    LOOKAHEAD(2)
 */
-    pragma(isPackageLevel) |
-    LOOKAHEAD(2)
-    exceptionDeclaration(isPackageLevel) |
-    LOOKAHEAD(2)
-    subtype_definition(isPackageLevel) |
-    LOOKAHEAD(4)
-    variableOrConstantDeclaration(isPackageLevel) |
-    LOOKAHEAD(2)
-    cursorSpec(isPackageLevel) |
-    cursorBody(isPackageLevel) |
-    collectionDeclaration(isPackageLevel) |
-    programUnit(isPackageLevel)
+        LOOKAHEAD(2)    pragma(isPackageLevel)
+    |   LOOKAHEAD(2)    exceptionDeclaration(isPackageLevel)
+    |   LOOKAHEAD(2)    subtype_definition(isPackageLevel)
+    |   LOOKAHEAD(4)    variableOrConstantDeclaration(isPackageLevel)
+    |   LOOKAHEAD(2)    cursorSpec(isPackageLevel)
+    |   cursorBody(isPackageLevel)
+    |   collectionDeclaration(isPackageLevel)
+    |   programUnit(isPackageLevel)
     )*
 }
 
@@ -302,7 +302,7 @@ void typeMemberDeclaration() throws SAXException :
 	String elementName = "MEMBER-FUNCTION";
 }
 {
-  start=<MEMBER> <FUNCTION> name=ID() <RETURN> type=datatype() (<CASCADE>)?
+  start=<MEMBER> <FUNCTION> name=ID() <RETURN> type=datatype() (LOOKAHEAD(2) <CASCADE>)?
   {
       processMemberComment(start, elementName, name.toString());
       m_out.pushAttribute("TYPE", purifyIdentifier(type));
@@ -454,10 +454,14 @@ void parameterDeclaration(Hashtable tags) throws SAXException :
 }
 {
   name=ID()
+  
   // the order of outer "|" is important !
   ( LOOKAHEAD(2) ( LOOKAHEAD(2) ( (<OUT>{paramMode = "OUT";}|(<IN> <OUT>{paramMode = "IN OUT";})) (LOOKAHEAD(2) <NOCOPY>)? ) | <IN> ) )?
+ 
   paramType=datatype()
+  
   ( (":="|<_DEFAULT>) paramDefault=expression() )?
+  
   {
     String paramName = name.toString();
     String paramComment = getParamComment(paramName, tags);
@@ -478,15 +482,14 @@ void parameterDeclaration(Hashtable tags) throws SAXException :
 String datatype() :
 { String name; }
 {
-  (
-    // this should be first
-    LOOKAHEAD(2) name=scalar_datatype_name()
-    |
     (
-      ( [LOOKAHEAD(2) <REF>] name=qualifiedName() ["%" (<TYPE>{name += "%TYPE";}|<ROWTYPE>{name += "%ROWTYPE";})] )
+        // this should be first
+        LOOKAHEAD(2) name=scalar_datatype_name()
+    |   ( [LOOKAHEAD(2) <REF>] name=qualifiedName() ["%" (<TYPE>{name += "%TYPE";}|<ROWTYPE>{name += "%ROWTYPE";})] )
     )
-  )
-  { return name; }
+    {
+        return name;
+    }
 }
 
 String scalar_datatype_name() :
@@ -504,7 +507,9 @@ String scalar_datatype_name() :
   // scalar types - character:
   <CHAR> | <CHARACTER> | LOOKAHEAD(2) (<LONG><RAW> {name = "LONG RAW";}) | <LONG> |
   <NCHAR> | <NVARCHAR2> | <RAW> | <ROWID> |
-  <STRING> | <UROWID> | <VARCHAR> | <VARCHAR2> |
+  <STRING> | <UROWID> | <VARCHAR> 
+  | <VARCHAR2> [LOOKAHEAD(2) <CHARACTER> <SET> ("ANY_CS" | qualifiedName() "%" <CHARSET>)]
+  |
 
   // scalar types - boolean:
   <BOOLEAN> |
@@ -553,12 +558,12 @@ String qualifiedName() :
 }
 {
   (
-    [LOOKAHEAD(2) schema=<IDENTIFIER> "."]   // schema
-    [LOOKAHEAD(2) packageName=<IDENTIFIER> "."]   // package
-    [LOOKAHEAD(2) packageMember=<IDENTIFIER> "."]   // package member
-    [LOOKAHEAD(2) packageMembersMember=<IDENTIFIER> "."]   // package member's member
+    [LOOKAHEAD(2) schema=ID() "."]   // schema
+    [LOOKAHEAD(2) packageName=ID() "."]   // package
+    [LOOKAHEAD(2) packageMember=ID() "."]   // package member
+    [LOOKAHEAD(2) packageMembersMember=ID() "."]   // package member's member
     name=ID() 	// simple or prefixed with schema
-    ["@" <IDENTIFIER>]					// remote
+    ["@" ID()]					// remote
   )
   {
     String fullName;
@@ -828,50 +833,10 @@ void cursorBody(boolean isPackageLevel) throws SAXException : {}
 * not possible without a symbol table.
 */
 
-/*###
-void expression() : {}
-{
-  "(" expression() ")"
-  |
-  "**" expression()
-  |
-  <CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>
-  |
-  (
-    expressionTerm()
-    ( LOOKAHEAD(2) (<AND> | <OR> | "||" | "+" | "-" | "*" | "/") expression() )*
-    //### +other_boolean_form !
-  )
-}
-###*/
-/** This is not term in classical sense.
-* Just had to split the left recursion.
-*/
-/*###
-void expressionTerm() : {}
-{
-  LOOKAHEAD(2) (LOOKAHEAD(2) <NOT>)?
-  variableOrFunctionCall() | numericLiteral()
-    | LOOKAHEAD(2) <TRUE> | LOOKAHEAD(2) <FALSE>
-    | <CHARACTER_LITERAL> | <STRING_LITERAL> |
-  LOOKAHEAD(2) ((<IDENTIFIER>|<SQL>) "%" "ROWCOUNT") |
-  qualifiedName()
-  (
-    "." ("COUNT" | "FIRST" | "LAST" | "LIMIT" | (("NEXT"|<PRIOR>|<EXISTS>) "(" numericLiteral() ")") )
-    |
-    "%" ("FOUND"|"ISOPEN"|"NOTFOUND"|("BULK_ROWCOUNT" "(" numericLiteral() ")"))
-  )
-}
-###*/
-
-String expression() :
+String expressionxx() :
 { String result = "", fname = ""; Token token = null;}
 {
   (
-  LOOKAHEAD(2) (<CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
-  |
-  LOOKAHEAD(2) (<CASE> expression() <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
-  |
   ("(" result = expression() ")")
   |
   (
@@ -882,18 +847,89 @@ String expression() :
         | LOOKAHEAD(2) <TRUE> | LOOKAHEAD(2) <FALSE> | <CHARACTER_LITERAL> | <STRING_LITERAL> |
       LOOKAHEAD(2) ((<IDENTIFIER>|<SQL>) "%" "ROWCOUNT") |
       LOOKAHEAD(2)
-      ( <IDENTIFIER> "." ("COUNT" | "FIRST" | "LAST" | "LIMIT" | (("NEXT"|<PRIOR>|<EXISTS>) "(" numericLiteral() ")") ) ) |
+//      ( <IDENTIFIER> "." ("COUNT" | "FIRST" | "LAST" | "LIMIT" | (("NEXT"|<PRIOR>|<EXISTS>) "(" numericLiteral() ")") ) ) |
       ( <IDENTIFIER> "%" ("FOUND"|"ISOPEN"|"NOTFOUND"|("BULK_ROWCOUNT" "(" numericLiteral() ")")) ) |
       ( <SQL> "%" "BULK_ROWCOUNT" "(" numericLiteral() ")" )
       // other_boolean_form:
       //### | expression() ( relationalOperator() expression() | <IS> [<NOT>] <NULL> /*### | [<NOT>]...*/)
     )
-    ["**" expression()]
+//    ["**" expression()]
     ( LOOKAHEAD(2) (<AND> | <OR> | "||" | "+" | "-" | "*" | "/" | relationalOperator()) expression() )*
   )
   )
   { return result; }
 }
+
+String expression() :
+{
+	String result = "", fname = ""; Token token = null;
+}
+{
+    (
+        (<NOT> expression())
+	|   LOOKAHEAD(2) (<CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
+    |   LOOKAHEAD(2) (<CASE> expression() <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
+    //|   LOOKAHEAD(2) (expressionTerm() <BETWEEN> expressionTerm() <AND> expressionTerm())
+    |   expressionTerm()
+    )
+
+    // Arithmatic
+    ( LOOKAHEAD(2) (<AND> | <OR> | "||" | "**" | "+" | "-" | "*" | "/" | relationalOperator()) expression() )*
+
+    // BETWEEN, if we have it
+    (LOOKAHEAD(2) (<BETWEEN> expressionTerm() <AND> expressionTerm()) )?
+
+   
+    {
+        return "expression";    // token.toString();
+    }
+}
+String expressionTerm() : {}
+{
+    (
+        numericLiteral()
+    |   LOOKAHEAD(2) <COUNT> "(" ("*" | expressionTerm()) ")"
+    |   <NULL> | <TRUE> | <FALSE> | <SYSDATE>
+    |   <CHARACTER_LITERAL>
+    |   <STRING_LITERAL>
+    |   LOOKAHEAD(2) ((<IDENTIFIER>|<SQL>) "%" "ROWCOUNT")
+    |   qualifiedName()
+    |   ("(" expression() ")")
+    )
+
+    // Expression parameters -- really only for functions, but will work for everything :-)
+    (
+        "("
+        (
+                  [LOOKAHEAD(2) <IDENTIFIER> "=>"] expression()
+            ( "," [LOOKAHEAD(2) <IDENTIFIER> "=>"] expression() )*
+        )?
+        ")"
+    )?
+/*
+*/
+    {
+        return "expressionTerm";    // token.toString();
+    }
+}
+
+/*
+String booleanExpression() : {}
+{
+    (<NOT>)?
+    expression()
+    (<AND> | <OR>)
+    (<NOT>)?
+    expression()
+}
+
+String otherBooleanFormExpression() : {}
+{
+    (
+        ID() "." <EXISTS> "(" expression ")"
+    )
+}
+*/
 
 void relationalOperator() :
 {}
@@ -993,16 +1029,13 @@ void datatypeDeclaration() : {} { <IDENTIFIER> }
 void pragma(boolean isPackageLevel) throws SAXException :
 { Token start,name,functionName,exceptionName,errorNumber; Hashtable tags = null; }
 {
-  start=<PRAGMA>
-  (
-    name=<SERIALLY_REUSABLE>
-    |
-    name=<AUTONOMOUS_TRANSACTION>
-    |
-    name=<RESTRICT_REFERENCES> "(" (functionName=ID() /*| <_DEFAULT>*/)
-    ("," (ID() | <STRING_LITERAL>) )+  ")"
-    |
-    name=<EXCEPTION_INIT> "(" exceptionName=<IDENTIFIER> "," errorNumber=numericLiteral() ")"
+	start=<PRAGMA>
+	(
+		name=<SERIALLY_REUSABLE>
+      |	name=<AUTONOMOUS_TRANSACTION>
+	  | name=<RESTRICT_REFERENCES> "(" (functionName=ID() /*| <_DEFAULT>*/)
+		("," (ID() | <STRING_LITERAL>) )+  ")"
+      | name=<EXCEPTION_INIT> "(" exceptionName=<IDENTIFIER> "," errorNumber=numericLiteral() ")"
   )
   ";"
   {
@@ -1043,4 +1076,12 @@ void select() :
   [LOOKAHEAD(2) <GROUP> <BY> qualifiedName() ("," qualifiedName())*]
   [LOOKAHEAD(2) <ORDER> <BY> qualifiedName() ("," qualifiedName())*]
   )
+}
+
+void selectExpression() : {}
+{
+  	([LOOKAHEAD(2) <IDENTIFIER> "."] (expression() | "*"))
+ 
+	[[<AS>] <IDENTIFIER>]
+  
 }

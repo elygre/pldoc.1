@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // $Header: /cvsroot/pldoc/sources/src/javacc/Parser.jj,v 1.8 2004/07/21 09:41:38 altumano Exp $
 //
 options {
-  //DEBUG_PARSER = true; DEBUG_TOKEN_MANAGER = true;
+  // DEBUG_PARSER = true; DEBUG_TOKEN_MANAGER = true;
+  // DEBUG_LOOKAHEAD = true;
   IGNORE_CASE = true;
   STATIC = false;
   LOOKAHEAD = 1;
-  DEBUG_LOOKAHEAD = false;
   CHOICE_AMBIGUITY_CHECK = 3;
   OTHER_AMBIGUITY_CHECK = 1;
   ERROR_REPORTING = true;
