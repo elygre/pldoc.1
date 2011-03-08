@@ -7,7 +7,7 @@ void input() throws SAXException : {}
 			LOOKAHEAD(6) packageSpec() 
 		| 	LOOKAHEAD(4) typeSpec() 
 		|	alterType()
-//		|	grant()
+		|	grant()
 		| sqlPlusCommand() 
 		| LOOKAHEAD(6) table() 
 		| view() 
@@ -833,7 +833,7 @@ void cursorBody(boolean isPackageLevel) throws SAXException : {}
 * not possible without a symbol table.
 */
 
-String expressionxx() :
+String expressionxxx() :
 { String result = "", fname = ""; Token token = null;}
 {
   (
@@ -862,54 +862,77 @@ String expressionxx() :
 
 String expression() :
 {
-	String result = "", fname = ""; Token token = null;
+	String result = "", term=null, term2=null; Token operator=null;
 }
 {
     (
-        (<NOT> expression())
-	|   LOOKAHEAD(2) (<CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
-    |   LOOKAHEAD(2) (<CASE> expression() <WHEN> expression() <THEN> expression() <ELSE> expression() <END>)
-    //|   LOOKAHEAD(2) (expressionTerm() <BETWEEN> expressionTerm() <AND> expressionTerm())
-    |   expressionTerm()
+        (<NOT> term=expression()) { result = "NOT " + term; }
+	|   LOOKAHEAD(2) (<CASE> <WHEN> expression() <THEN> expression() <ELSE> expression() <END>) { result="CASE WHEN...END"; }
+    |   LOOKAHEAD(2) (<CASE> expression() <WHEN> expression() <THEN> expression() <ELSE> expression() <END>) { result="CASE...END"; }
+    |   result=expressionTerm() 
     )
 
-    // Arithmatic
-    ( LOOKAHEAD(2) (<AND> | <OR> | "||" | "**" | "+" | "-" | "*" | "/" | relationalOperator()) expression() )*
+    // Binary operators, if we have them
+    ( 
+        LOOKAHEAD(2) (<AND> | <OR> | "||" | "**" | "+" | "-" | "*" | "/" | "=" | "<>" | "!=" | "~=" | "^=" | "<" | ">" | "<=" | ">=")
+        {
+            result += " " + token.toString();
+        }
+        
+        term=expression() 
+        {
+            result += " " + term;
+        }
+    )*
 
     // BETWEEN, if we have it
-    (LOOKAHEAD(2) (<BETWEEN> expressionTerm() <AND> expressionTerm()) )?
+    ( 
+        LOOKAHEAD(2) (<BETWEEN> term=expressionTerm() <AND> term2=expressionTerm())
+        {
+            result += " BETWEEN " + term + " AND " + term2;
+        }
+    )?
 
-   
     {
-        return "expression";    // token.toString();
+        return result;
     }
 }
-String expressionTerm() : {}
+String expressionTerm() :
+{
+    String result="";
+    String expr=null;
+    Token ident=null;
+}
 {
     (
-        numericLiteral()
-    |   LOOKAHEAD(2) <COUNT> "(" ("*" | expressionTerm()) ")"
-    |   <NULL> | <TRUE> | <FALSE> | <SYSDATE>
-    |   <CHARACTER_LITERAL>
-    |   <STRING_LITERAL>
-    |   LOOKAHEAD(2) ((<IDENTIFIER>|<SQL>) "%" "ROWCOUNT")
-    |   qualifiedName()
-    |   ("(" expression() ")")
+        (<NULL> | <TRUE> | <FALSE> | <SYSDATE> | <CHARACTER_LITERAL> | <STRING_LITERAL>)  { result=token.toString(); }
+    |   LOOKAHEAD(2) (<COUNT> "(" ("*" | expressionTerm()) ")") { result="COUNT(...)"; }
+    |   LOOKAHEAD(2) ((ident=<IDENTIFIER>|<SQL>) "%" "ROWCOUNT") { result=ident.toString() + "%ROWCOUNT"; }
+    |   numericLiteral() { result=token.toString(); }
+    |   result=qualifiedName()
+    |   ( "(" expr=expression() ")" ) { result="(" + expr + ")"; }
     )
 
     // Expression parameters -- really only for functions, but will work for everything :-)
     (
-        "("
+        "(" { result += " ("; }
         (
-                  [LOOKAHEAD(2) <IDENTIFIER> "=>"] expression()
-            ( "," [LOOKAHEAD(2) <IDENTIFIER> "=>"] expression() )*
+            [LOOKAHEAD(2) (ident=<IDENTIFIER> "=>") {result += ident + " => ";}]
+            expr=expression() {result += expr;}
+            
+            ( 
+                "," { result += ", "; }
+                [LOOKAHEAD(2) (ident=<IDENTIFIER> "=>") {result += ident + " => ";}]
+                expr=expression() {result += expr;}
+            )*
         )?
-        ")"
+        ")" { result += ")"; }
     )?
-/*
-*/
     {
-        return "expressionTerm";    // token.toString();
+    }
+
+    {
+        return result;
     }
 }
 
@@ -931,10 +954,14 @@ String otherBooleanFormExpression() : {}
 }
 */
 
-void relationalOperator() :
+Token relationalOperator() :
 {}
 {
-  "=" | "<>" | "!=" | "~=" | "^=" | "<" | ">" | "<=" | ">="
+  ("=" | "<>" | "!=" | "~=" | "^=" | "<" | ">" | "<=" | ">=")
+  {
+    return token;
+  }
+  
 }
 
 String variableOrFunctionCall() :

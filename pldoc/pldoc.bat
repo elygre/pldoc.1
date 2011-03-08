@@ -9,7 +9,6 @@ REM NB: this is needed to make JDK1.4 use our Xerces version instead of internal
 set bcp=%pldir%xalan\bin\xalan.jar;%pldir%xalan\bin\xml-apis.jar;%pldir%xalan\bin\xercesImpl.jar
 REM Set classpath
 REM NB: classpath must contain the pldoc directory to be able to locate .xsl files
-set cp=%pldir%;%pldir%\pldoc.jar
 set cp=%pldir%;%pldir%\target\pldoc-0.9.1-SNAPSHOT.jar
 
 :arg
@@ -29,4 +28,5 @@ rem java -Xbootclasspath/p:"%bcp%" -cp "%cp%" net.sourceforge.pldoc.PLDoc %*
 
 set xalandir=%pldir%xalan\bin
 set bcp=%xalandir%\xalan.jar;%xalandir%\xml-apis.jar;%xalandir%\xercesImpl.jar;%xalandir%\serializer.jar
+echo java -Xbootclasspath/p:"%bcp%" -cp "%cp%" net.sourceforge.pldoc.PLDoc %* >_dorun.bat
 java -Xbootclasspath/p:"%bcp%" -cp "%cp%" net.sourceforge.pldoc.PLDoc %*
