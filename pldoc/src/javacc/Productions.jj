@@ -298,20 +298,44 @@ void typeMemberDeclaration() throws SAXException :
 {
 	Token start=null;
 	Token name=null;
-	String type;
+	String type=null;
 	String elementName = "MEMBER-FUNCTION";
+    Hashtable tags;
 }
 {
-  start=<MEMBER> <FUNCTION> name=ID() <RETURN> type=datatype() (LOOKAHEAD(2) <CASCADE>)?
-  {
-      processMemberComment(start, elementName, name.toString());
-      m_out.pushAttribute("TYPE", purifyIdentifier(type));
-      m_out.startElement("RETURN");
-      m_out.endElement("RETURN");
-      m_out.pushAttribute("NAME", purifyIdentifier(name.toString()));
-      m_out.pushAttribute("TYPE", purifyIdentifier(type));
-      m_out.endElement(elementName);
-  }
+    (LOOKAHEAD(1) start=<MEMBER> | start=<STATIC> | start=<CONSTRUCTOR>)
+    (LOOKAHEAD(1) <PROCEDURE> | <FUNCTION>)
+    name=ID()
+
+/*
+    (
+        (LOOKAHEAD(3) start=<MEMBER> <PROCEDURE>      name=ID())
+      | (LOOKAHEAD(3) start=<MEMBER> <FUNCTION>       name=ID())
+      | (LOOKAHEAD(3) start=<STATIC> <PROCEDURE>      name=ID())
+      | (LOOKAHEAD(3) start=<STATIC> <FUNCTION>       name=ID())
+      | (LOOKAHEAD(1) start=<CONSTRUCTOR> <FUNCTION>  name=ID())
+    )
+*/
+//    (start=<MEMBER> | start=<CONSTRUCTOR>) <FUNCTION> name=ID()
+
+    {
+        tags = processMemberComment(start, elementName, name.toString());
+    }
+  
+    ( "(" parameterDeclaration(tags) ( "," parameterDeclaration(tags) )* ")" )*
+
+    [LOOKAHEAD(1) <RETURN> type=datatype() [LOOKAHEAD(1) <AS> <RESULT>]]
+
+    [LOOKAHEAD(1) <CASCADE>]
+
+    {
+        m_out.pushAttribute("TYPE", purifyIdentifier(type));
+        m_out.startElement("RETURN");
+        m_out.endElement("RETURN");
+        m_out.pushAttribute("NAME", purifyIdentifier(name.toString()));
+        m_out.pushAttribute("TYPE", purifyIdentifier(type));
+        m_out.endElement(elementName);
+    }
 }
 
 void typeVariableDeclaration() throws SAXException :

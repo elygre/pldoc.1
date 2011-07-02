@@ -6,7 +6,7 @@
     <groupId>net.sourceforge.pldoc</groupId>
     <packaging>jar</packaging>
     <description>Documentation tool for PLSQL</description>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>1.0-snapshot</version>
     <url>http://pldoc.sourceforge.net</url>
     <licenses>
         <license>

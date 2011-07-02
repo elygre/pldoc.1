@@ -305,6 +305,9 @@ public class PLSQLParser {
   */
   private String purifyIdentifier(String name)
   {
+    if (name==null)
+        return null;
+        
     // change case as requested in settings
     if (namesUppercase) {
       name = name.toUpperCase();
